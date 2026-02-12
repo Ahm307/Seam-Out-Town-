@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سيم جيم أوت تاون - قريباً</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #f59e0b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .header {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .container {
+            max-width: 800px;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+            text-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+        }
+
+        .maintenance-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--accent-color);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            border: 1px solid var(--accent-color);
+        }
+
+        .footer-text {
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">سيم جيم أوت تاون</div>
+
+    <div class="container">
+        <div class="maintenance-card">
+            <div class="icon">🛠️</div>
+            <h1>تحت الصيانة والتحديث</h1>
+            <p>نعمل حالياً على تجهيز أفضل تجربة لمسابقة <b>سيم جيم أوت تاون</b>.</p>
+            <p>نحن نقوم بإضافة الأسئلة الجديدة وتجهيز الفئات الممتعة (السيارات، السيرة، والمعلومات العامة) لنضمن لكم المتعة والتحدي.</p>
+            
+            <div class="status-badge">جاري العمل على تحديث الخوادم</div>
+        </div>
+
+        <div class="footer-text">
+            جميع الحقوق محفوظة © 2024 - فريق تطوير أوت تاون
+        </div>
+    </div>
+
+</body>
+</html>
