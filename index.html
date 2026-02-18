@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سيم جيم أوت تاون - رمضان مبارك</title>
+    <title>سيم جيم أوت تاون - نسخة رمضان</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -14,25 +14,19 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            margin: 0;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
+            background-color: var(--bg-color); color: var(--text-primary);
+            margin: 0; overflow-x: hidden; display: flex; flex-direction: column;
+            align-items: center; min-height: 100vh;
         }
 
-        /* شاشة الدخول اللامعة */
+        /* شاشة الدخول */
         #intro-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-color);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 9999; transition: opacity 1s;
+            background: var(--bg-color); display: flex; justify-content: center;
+            align-items: center; z-index: 9999; transition: opacity 1s;
         }
         .shiny-text {
-            font-size: 3.5rem; font-weight: bold;
+            font-size: 3.5rem; font-weight: bold; text-align: center;
             background: linear-gradient(90deg, transparent, #fff, transparent);
             background-size: 80%; background-repeat: no-repeat;
             -webkit-background-clip: text; -webkit-text-fill-color: var(--accent-color);
@@ -48,16 +42,10 @@
             box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); z-index: 100;
         }
 
-        /* شاشة تسجيل الفرق */
-        #setup-screen {
-            display: none; flex-direction: column; align-items: center; 
-            justify-content: center; flex-grow: 1; width: 100%;
-        }
-
-        /* واجهة الفئات (Categories) */
+        /* شاشة الفئات */
         #categories-screen {
             display: none; width: 95%; max-width: 1200px;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 20px; padding: 40px 20px;
         }
         .cat-card {
@@ -65,10 +53,8 @@
             display: flex; flex-direction: column; align-items: center;
             border-bottom: 5px solid var(--accent-color); overflow: hidden;
         }
-        .cat-main {
-            display: flex; width: 100%; justify-content: space-between; align-items: center;
-        }
-        .points-col { display: flex; flex-direction: column; gap: 5px; width: 70px; }
+        .cat-main { display: flex; width: 100%; justify-content: space-between; align-items: center; }
+        .points-col { display: flex; flex-direction: column; gap: 5px; width: 80px; padding: 10px; }
         .point-box {
             background: #334155; color: #fff; padding: 15px 5px;
             text-align: center; font-weight: bold; cursor: pointer;
@@ -80,46 +66,50 @@
             color: #000; padding: 10px; font-weight: bold; width: 100%;
         }
 
-        /* واجهة اللعبة (المساعدات يمين ويسار) */
-        #game-interface {
-            display: none; width: 98%; justify-content: space-between;
-            margin-top: 20px;
-        }
+        /* واجهة اللعبة والمساعدات */
+        #game-interface { display: none; width: 98%; justify-content: space-between; margin-top: 20px; }
         .sidebar {
-            width: 200px; background: rgba(30, 41, 59, 0.6);
+            width: 220px; background: rgba(30, 41, 59, 0.6);
             border: 2px solid var(--accent-color); padding: 15px;
             text-align: center; border-radius: 15px;
         }
-        .score-display { font-size: 3rem; font-weight: bold; color: var(--accent-color); }
+        .score-display { font-size: 3.5rem; font-weight: bold; color: var(--accent-color); }
         .help-item {
-            display: flex; align-items: center; gap: 10px; margin-top: 15px;
-            cursor: pointer; font-size: 1rem; padding: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex; align-items: center; justify-content: center; gap: 10px; 
+            margin-top: 15px; cursor: pointer; font-size: 1rem; padding: 10px;
+            background: rgba(255,255,255,0.05); border-radius: 8px;
         }
 
         .question-area { flex-grow: 1; margin: 0 20px; text-align: center; }
-        .question-card { background: var(--card-bg); padding: 30px; border-radius: 20px; }
+        .question-card { background: var(--card-bg); padding: 40px; border-radius: 20px; border: 1px solid #334155; }
         
-        /* تنسيق التسجيل */
+        /* أزرار الرصد */
+        .winner-selection { display: none; margin-top: 30px; border-top: 1px solid #444; padding-top: 20px; }
+        .win-btn {
+            background: var(--accent-color); color: #000; border: none;
+            padding: 15px 30px; margin: 10px; border-radius: 10px;
+            font-weight: bold; cursor: pointer; font-size: 1.1rem;
+        }
+
+        #setup-screen { display: none; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; width: 100%; }
         .container { width: 90%; max-width: 600px; text-align: center; }
         .team-box { background: var(--card-bg); border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
         .team-label { background: var(--accent-color); color: #000; padding: 10px; font-weight: bold; }
         input { width: 100%; padding: 15px; background: #21262d; border: none; color: #fff; text-align: center; font-size: 1.1rem; box-sizing: border-box;}
-        .start-btn { background: var(--accent-color); padding: 15px 50px; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; margin-top: 20px; }
+        .start-btn { background: var(--accent-color); padding: 15px 50px; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; }
     </style>
 </head>
 <body>
 
     <div id="intro-screen"><div class="shiny-text">سيم جيم أوت تاون</div></div>
-
     <div id="top-timer-bar">00:00</div>
 
     <div id="setup-screen">
-        <h1>🌙 رمضان مبارك</h1>
+        <h1>🌙 سيم جيم أوت تاون</h1>
         <div class="container">
             <div class="team-box">
                 <div class="team-label">الفريق الأول</div>
-                <input type="text" id="t1" value="را">
+                <input type="text" id="t1" value="دربحه">
             </div>
             <div class="team-box">
                 <div class="team-label">الفريق الثاني</div>
@@ -129,12 +119,11 @@
         </div>
     </div>
 
-    <div id="categories-screen">
-        </div>
+    <div id="categories-screen"></div>
 
     <div id="game-interface">
         <div class="sidebar">
-            <div id="side-name-1" style="color:var(--accent-color); font-weight:bold;">فريق 1</div>
+            <div id="side-name-1" style="color:var(--accent-color); font-weight:bold;"></div>
             <div class="score-display" id="score1">0</div>
             <div style="border-top:1px solid #444; margin-top:10px; padding-top:10px;">المساعدات</div>
             <div class="help-item">📞 اتصال بصديق</div>
@@ -142,11 +131,10 @@
             <div class="help-item">🕳️ الحفرة</div>
         </div>
 
-        <div class="question-area" id="q-content">
-            </div>
+        <div class="question-area" id="q-content"></div>
 
         <div class="sidebar">
-            <div id="side-name-2" style="color:var(--accent-color); font-weight:bold;">فريق 2</div>
+            <div id="side-name-2" style="color:var(--accent-color); font-weight:bold;"></div>
             <div class="score-display" id="score2">0</div>
             <div style="border-top:1px solid #444; margin-top:10px; padding-top:10px;">المساعدات</div>
             <div class="help-item">📞 اتصال بصديق</div>
@@ -156,21 +144,34 @@
     </div>
 
     <script>
-        const categories = [
-            { title: "أسئلة عامة", icon: "🌍" },
-            { title: "أسئلة دينية", icon: "🕌" },
-            { title: "أسئلة تاريخية", icon: "📜" },
-            { title: "معلومات عامة", icon: "💡" }
-        ];
+        let score1 = 0; let score2 = 0; let currentPoints = 0;
+        const bank = {
+            "أسئلة دينية": {
+                icon: "🕌",
+                left: { 200: {q:"ما هي أطول سورة في القرآن؟", a:"سورة البقرة"}, 400: {q:"كم عدد الخلفاء الراشدين؟", a:"4"}, 600: {q:"من هو الملقب بذي النورين؟", a:"عثمان بن عفان"} },
+                right: { 200: {q:"ما هي السورة التي تسمى عروس القرآن؟", a:"سورة الرحمن"}, 400: {q:"من هو أول مؤذن في الإسلام؟", a:"بلال بن رباح"}, 600: {q:"كم عدد أجزاء القرآن الكريم؟", a:"30 جزء"} }
+            },
+            "السيارات": {
+                icon: "🚗",
+                left: { 200: {q:"ما هي جنسية شركة تويوتا؟", a:"يابانية"}, 400: {q:"ما هي الشركة التي استحوذت على فولفو؟", a:"جيلي الصينية"}, 600: {q:"ما هو شعار شركة مرسيدس؟", a:"النجمة الثلاثية"} },
+                right: { 200: {q:"ما هي أسرع سيارة في العالم؟", a:"بوغاتي"}, 400: {q:"شعار الحصان يرمز لأي شركة؟", a:"فيراري"}, 600: {q:"ما هي بلد منشأ شركة هيونداي؟", a:"كوريا الجنوبية"} }
+            },
+            "حكام الدول": {
+                icon: "👑",
+                left: { 200: {q:"من هو ملك المملكة العربية السعودية الحالي؟", a:"الملك سلمان بن عبدالعزيز"}, 400: {q:"من هو حاكم سلطنة عمان؟", a:"السلطان هيثم بن طارق"}, 600: {q:"من هو مؤسس الدولة السعودية الأولى؟", a:"محمد بن سعود"} },
+                right: { 200: {q:"من هو أمير دولة قطر الحالي؟", a:"الشيخ تميم بن حمد"}, 400: {q:"من هو ملك الأردن؟", a:"الملك عبدالله الثاني"}, 600: {q:"من هو رئيس دولة الإمارات؟", a:"الشيخ محمد بن زايد"} }
+            },
+            "أسئلة تاريخية": {
+                icon: "📜",
+                left: { 200: {q:"من فتح الأندلس؟", a:"طارق بن زياد"}, 400: {q:"متى انتهت الحرب العالمية الثانية؟", a:"1945"}, 600: {q:"من هو مكتشف أمريكا؟", a:"كريستوفر كولومبوس"} },
+                right: { 200: {q:"من بنى الأهرامات؟", a:"قدماء المصريين"}, 400: {q:"ما هي عاصمة الدولة الأموية؟", a:"دمشق"}, 600: {q:"في أي عام توحدت المملكة العربية السعودية؟", a:"1351هـ / 1932م"} }
+            }
+        };
 
-        let seconds = 0;
         function startTimer() {
-            setInterval(() => {
-                seconds++;
-                let mins = Math.floor(seconds / 60);
-                let secs = seconds % 60;
-                document.getElementById('top-timer-bar').innerText = 
-                    (mins < 10 ? "0" + mins : mins) + ":" + (secs < 10 ? "0" + secs : secs);
+            let s = 0; setInterval(() => {
+                s++; let mins = Math.floor(s/60); let secs = s%60;
+                document.getElementById('top-timer-bar').innerText = (mins<10?"0"+mins:mins)+":"+(secs<10?"0"+secs:secs);
             }, 1000);
         }
 
@@ -182,54 +183,68 @@
                 document.getElementById('top-timer-bar').style.display = 'block';
                 startTimer();
             }, 1000);
-        }, 3000);
+        }, 2000);
 
         function showCategories() {
             const n1 = document.getElementById('t1').value;
             const n2 = document.getElementById('t2').value;
-            if(n2 === "") { alert("ادخل اسم الفريق الثاني"); return; }
-            
+            if(!n2) return alert("ادخل اسم الفريق الثاني");
             document.getElementById('side-name-1').innerText = n1;
             document.getElementById('side-name-2').innerText = n2;
             document.getElementById('setup-screen').style.display = 'none';
-            const catScreen = document.getElementById('categories-screen');
-            catScreen.style.display = 'grid';
-
-            categories.forEach(cat => {
-                catScreen.innerHTML += `
+            const screen = document.getElementById('categories-screen');
+            screen.style.display = 'grid';
+            screen.innerHTML = "";
+            Object.keys(bank).forEach(cat => {
+                screen.innerHTML += `
                     <div class="cat-card">
                         <div class="cat-main">
                             <div class="points-col">
-                                <div class="point-box" onclick="loadQuestion('${cat.title}', 200)">200</div>
-                                <div class="point-box" onclick="loadQuestion('${cat.title}', 400)">400</div>
-                                <div class="point-box" onclick="loadQuestion('${cat.title}', 600)">600</div>
+                                <div class="point-box" onclick="loadQ('${cat}','left',200)">200</div>
+                                <div class="point-box" onclick="loadQ('${cat}','left',400)">400</div>
+                                <div class="point-box" onclick="loadQ('${cat}','left',600)">600</div>
                             </div>
-                            <div style="font-size: 4rem; flex-grow:1; text-align:center;">${cat.icon}</div>
+                            <div style="font-size: 3.5rem;">${bank[cat].icon}</div>
                             <div class="points-col">
-                                <div class="point-box" onclick="loadQuestion('${cat.title}', 200)">200</div>
-                                <div class="point-box" onclick="loadQuestion('${cat.title}', 400)">400</div>
-                                <div class="point-box" onclick="loadQuestion('${cat.title}', 600)">600</div>
+                                <div class="point-box" onclick="loadQ('${cat}','right',200)">200</div>
+                                <div class="point-box" onclick="loadQ('${cat}','right',400)">400</div>
+                                <div class="point-box" onclick="loadQ('${cat}','right',600)">600</div>
                             </div>
                         </div>
-                        <div class="cat-title">${cat.title}</div>
-                    </div>
-                `;
+                        <div class="cat-title">${cat}</div>
+                    </div>`;
             });
         }
 
-        function loadQuestion(cat, points) {
+        function loadQ(cat, side, pts) {
+            currentPoints = pts;
+            const data = bank[cat][side][pts];
             document.getElementById('categories-screen').style.display = 'none';
             document.getElementById('game-interface').style.display = 'flex';
             document.getElementById('q-content').innerHTML = `
                 <div class="question-card">
-                    <h1 style="color:var(--accent-color)">${cat} - ${points} نقطة</h1>
-                    <p style="font-size:1.5rem">سؤال تجريبي: من هو أول من آمن من الرجال؟</p>
-                    <button class="start-btn" onclick="backToCats()">العودة للفئات</button>
-                </div>
-            `;
+                    <h2 style="color:var(--accent-color)">${cat} - ${pts} نقطة</h2>
+                    <p style="font-size:2rem; margin:30px 0;">${data.q}</p>
+                    <p id="ans" style="display:none; color:#4ade80; font-weight:bold; font-size:1.6rem;">الإجابة: ${data.a}</p>
+                    <button class="start-btn" id="rev-btn" onclick="reveal()">إظهار الإجابة</button>
+                    <div class="winner-selection" id="win-area">
+                        <p>من الفائز بالنقاط؟</p>
+                        <button class="win-btn" onclick="addPts(1)">${document.getElementById('t1').value}</button>
+                        <button class="win-btn" onclick="addPts(2)">${document.getElementById('t2').value}</button>
+                        <button class="win-btn" style="background:#444; color:#fff;" onclick="addPts(0)">لا أحد</button>
+                    </div>
+                </div>`;
         }
 
-        function backToCats() {
+        function reveal() {
+            document.getElementById('ans').style.display = 'block';
+            document.getElementById('rev-btn').style.display = 'none';
+            document.getElementById('win-area').style.display = 'block';
+        }
+
+        function addPts(team) {
+            if(team === 1) { score1 += currentPoints; document.getElementById('score1').innerText = score1; }
+            if(team === 2) { score2 += currentPoints; document.getElementById('score2').innerText = score2; }
             document.getElementById('game-interface').style.display = 'none';
             document.getElementById('categories-screen').style.display = 'grid';
         }
