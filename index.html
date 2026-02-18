@@ -26,12 +26,10 @@
 
         /* شاشة الدخول اللامعة */
         #intro-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-color);
             display: flex; justify-content: center; align-items: center;
-            z-index: 9999;
-            transition: opacity 1s;
+            z-index: 9999; transition: opacity 1s;
         }
         .shiny-text {
             font-size: 3.5rem; font-weight: bold;
@@ -44,111 +42,70 @@
 
         /* التايمر العلوي */
         #top-timer-bar {
-            display: none;
-            background-color: var(--accent-color);
-            color: #432b05;
-            padding: 8px 30px;
-            border-radius: 50px;
-            font-size: 1.6rem;
-            font-weight: bold;
-            margin-top: 20px;
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
-            z-index: 100;
+            display: none; background-color: var(--accent-color);
+            color: #432b05; padding: 8px 30px; border-radius: 50px;
+            font-size: 1.6rem; font-weight: bold; margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); z-index: 100;
         }
 
         /* شاشة تسجيل الفرق */
         #setup-screen {
-            display: none;
-            flex-direction: column; align-items: center; justify-content: center;
-            flex-grow: 1; width: 100%;
+            display: none; flex-direction: column; align-items: center; 
+            justify-content: center; flex-grow: 1; width: 100%;
+        }
+
+        /* واجهة الفئات (Categories) */
+        #categories-screen {
+            display: none; width: 95%; max-width: 1200px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px; padding: 40px 20px;
+        }
+        .cat-card {
+            background: var(--card-bg); border-radius: 15px;
+            display: flex; flex-direction: column; align-items: center;
+            border-bottom: 5px solid var(--accent-color); overflow: hidden;
+        }
+        .cat-main {
+            display: flex; width: 100%; justify-content: space-between; align-items: center;
+        }
+        .points-col { display: flex; flex-direction: column; gap: 5px; width: 70px; }
+        .point-box {
+            background: #334155; color: #fff; padding: 15px 5px;
+            text-align: center; font-weight: bold; cursor: pointer;
+            border-radius: 30px; margin: 5px; transition: 0.3s;
+        }
+        .point-box:hover { background: var(--accent-color); color: #000; }
+        .cat-title {
+            flex-grow: 1; text-align: center; background: #f1f5f9;
+            color: #000; padding: 10px; font-weight: bold; width: 100%;
         }
 
         /* واجهة اللعبة (المساعدات يمين ويسار) */
         #game-interface {
-            display: none;
-            width: 95%;
-            max-width: 1300px;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-top: 30px;
-            padding: 10px;
-        }
-
-        .sidebar {
-            width: 180px;
-            background: rgba(30, 41, 59, 0.6);
-            border: 2px solid var(--accent-color);
-            padding: 15px;
-            text-align: center;
-            border-radius: 15px;
-        }
-        .team-name-tag { font-weight: bold; color: var(--accent-color); margin-bottom: 10px; font-size: 1.2rem; }
-        .score-display { font-size: 2.5rem; font-weight: bold; color: #fff; }
-        .help-item {
-            display: flex; align-items: center; gap: 8px; margin-top: 15px;
-            cursor: pointer; font-size: 0.9rem; background: rgba(255,255,255,0.05);
-            padding: 8px; border-radius: 8px; transition: 0.3s;
-        }
-        .help-item:hover { background: var(--accent-color); color: #000; }
-
-        /* منطقة السؤال */
-        .question-area {
-            flex-grow: 1;
-            margin: 0 20px;
-            text-align: center;
-        }
-        .question-card {
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 20px;
-            border: 1px solid rgba(245, 158, 11, 0.3);
-        }
-        .question-image {
-            width: 100%;
-            max-width: 400px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border: 3px solid var(--accent-color);
-        }
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            display: none; width: 98%; justify-content: space-between;
             margin-top: 20px;
         }
-        .option-btn {
-            background: #21262d;
-            border: 2px solid #30363d;
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1.1rem;
+        .sidebar {
+            width: 200px; background: rgba(30, 41, 59, 0.6);
+            border: 2px solid var(--accent-color); padding: 15px;
+            text-align: center; border-radius: 15px;
         }
-        .show-answer-btn {
-            margin-top: 25px;
-            background: none;
-            border: 1px solid var(--accent-color);
-            color: var(--accent-color);
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        #correct-answer-text {
-            margin-top: 15px;
-            color: #4ade80;
-            font-weight: bold;
-            display: none;
+        .score-display { font-size: 3rem; font-weight: bold; color: var(--accent-color); }
+        .help-item {
+            display: flex; align-items: center; gap: 10px; margin-top: 15px;
+            cursor: pointer; font-size: 1rem; padding: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
+        .question-area { flex-grow: 1; margin: 0 20px; text-align: center; }
+        .question-card { background: var(--card-bg); padding: 30px; border-radius: 20px; }
+        
         /* تنسيق التسجيل */
         .container { width: 90%; max-width: 600px; text-align: center; }
         .team-box { background: var(--card-bg); border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
         .team-label { background: var(--accent-color); color: #000; padding: 10px; font-weight: bold; }
-        input { width: 100%; padding: 15px; background: #21262d; border: none; color: #fff; text-align: center; box-sizing: border-box; font-size: 1.1rem; }
-        .start-btn { background: var(--accent-color); padding: 15px 50px; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; margin-top: 20px; font-size: 1.1rem; }
-
-        .error-msg { color: #ef4444; margin-top: 10px; display: none; }
+        input { width: 100%; padding: 15px; background: #21262d; border: none; color: #fff; text-align: center; font-size: 1.1rem; box-sizing: border-box;}
+        .start-btn { background: var(--accent-color); padding: 15px 50px; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -168,42 +125,30 @@
                 <div class="team-label">الفريق الثاني</div>
                 <input type="text" id="t2" placeholder="أدخل اسم الفريق الثاني">
             </div>
-            <button class="start-btn" onclick="startGame()">ابدأ اللعب</button>
-            <p id="err" class="error-msg">يجب إدخال اسم الفريق الثاني</p>
+            <button class="start-btn" onclick="showCategories()">ابدأ اللعب</button>
         </div>
     </div>
 
+    <div id="categories-screen">
+        </div>
+
     <div id="game-interface">
         <div class="sidebar">
-            <div id="side-name-1" class="team-name-tag">الفريق 1</div>
-            <div class="score-display">0</div>
-            <div style="margin: 10px 0; border-top: 1px solid #444;">المساعدات</div>
+            <div id="side-name-1" style="color:var(--accent-color); font-weight:bold;">فريق 1</div>
+            <div class="score-display" id="score1">0</div>
+            <div style="border-top:1px solid #444; margin-top:10px; padding-top:10px;">المساعدات</div>
             <div class="help-item">📞 اتصال بصديق</div>
             <div class="help-item">✌️ اختيار إجابتين</div>
             <div class="help-item">🕳️ الحفرة</div>
         </div>
 
-        <div class="question-area">
-            <div class="question-card">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Operation_Rosario.jpg/300px-Operation_Rosario.jpg" class="question-image" alt="Question Image">
-                <h2 style="margin: 0;">ما هو الاسم الرمزي لهذه العملية العسكرية الأرجنتينية عام 1982؟</h2>
-                
-                <div class="options-grid">
-                    <div class="option-btn">عملية روزاريو</div>
-                    <div class="option-btn">عملية العاصفة</div>
-                    <div class="option-btn">عملية الفجر</div>
-                    <div class="option-btn">عملية الصقر</div>
-                </div>
-
-                <button class="show-answer-btn" onclick="toggleAnswer()">إظهار الإجابة الصحيحة</button>
-                <p id="correct-answer-text">الإجابة الصحيحة هي: عملية روزاريو</p>
+        <div class="question-area" id="q-content">
             </div>
-        </div>
 
         <div class="sidebar">
-            <div id="side-name-2" class="team-name-tag">الفريق 2</div>
-            <div class="score-display">0</div>
-            <div style="margin: 10px 0; border-top: 1px solid #444;">المساعدات</div>
+            <div id="side-name-2" style="color:var(--accent-color); font-weight:bold;">فريق 2</div>
+            <div class="score-display" id="score2">0</div>
+            <div style="border-top:1px solid #444; margin-top:10px; padding-top:10px;">المساعدات</div>
             <div class="help-item">📞 اتصال بصديق</div>
             <div class="help-item">✌️ اختيار إجابتين</div>
             <div class="help-item">🕳️ الحفرة</div>
@@ -211,6 +156,13 @@
     </div>
 
     <script>
+        const categories = [
+            { title: "أسئلة عامة", icon: "🌍" },
+            { title: "أسئلة دينية", icon: "🕌" },
+            { title: "أسئلة تاريخية", icon: "📜" },
+            { title: "معلومات عامة", icon: "💡" }
+        ];
+
         let seconds = 0;
         function startTimer() {
             setInterval(() => {
@@ -232,25 +184,54 @@
             }, 1000);
         }, 3000);
 
-        function startGame() {
-            const name1 = document.getElementById('t1').value;
-            const name2 = document.getElementById('t2').value;
-
-            if(name2 === "") {
-                document.getElementById('err').style.display = 'block';
-                return;
-            }
-
-            document.getElementById('side-name-1').innerText = name1;
-            document.getElementById('side-name-2').innerText = name2;
-
+        function showCategories() {
+            const n1 = document.getElementById('t1').value;
+            const n2 = document.getElementById('t2').value;
+            if(n2 === "") { alert("ادخل اسم الفريق الثاني"); return; }
+            
+            document.getElementById('side-name-1').innerText = n1;
+            document.getElementById('side-name-2').innerText = n2;
             document.getElementById('setup-screen').style.display = 'none';
-            document.getElementById('game-interface').style.display = 'flex';
+            const catScreen = document.getElementById('categories-screen');
+            catScreen.style.display = 'grid';
+
+            categories.forEach(cat => {
+                catScreen.innerHTML += `
+                    <div class="cat-card">
+                        <div class="cat-main">
+                            <div class="points-col">
+                                <div class="point-box" onclick="loadQuestion('${cat.title}', 200)">200</div>
+                                <div class="point-box" onclick="loadQuestion('${cat.title}', 400)">400</div>
+                                <div class="point-box" onclick="loadQuestion('${cat.title}', 600)">600</div>
+                            </div>
+                            <div style="font-size: 4rem; flex-grow:1; text-align:center;">${cat.icon}</div>
+                            <div class="points-col">
+                                <div class="point-box" onclick="loadQuestion('${cat.title}', 200)">200</div>
+                                <div class="point-box" onclick="loadQuestion('${cat.title}', 400)">400</div>
+                                <div class="point-box" onclick="loadQuestion('${cat.title}', 600)">600</div>
+                            </div>
+                        </div>
+                        <div class="cat-title">${cat.title}</div>
+                    </div>
+                `;
+            });
         }
 
-        function toggleAnswer() {
-            const ans = document.getElementById('correct-answer-text');
-            ans.style.display = (ans.style.display === 'block') ? 'none' : 'block';
+        function loadQuestion(cat, points) {
+            document.getElementById('categories-screen').style.display = 'none';
+            document.getElementById('game-interface').style.display = 'flex';
+            document.getElementById('q-content').innerHTML = `
+                <div class="question-card">
+                    <h1 style="color:var(--accent-color)">${cat} - ${points} نقطة</h1>
+                    <p style="font-size:1.5rem">سؤال تجريبي: من هو أول من آمن من الرجال؟</p>
+                    <button class="start-btn" onclick="backToCats()">العودة للفئات</button>
+                </div>
+            `;
+        }
+
+        function backToCats() {
+            document.getElementById('game-interface').style.display = 'none';
+            document.getElementById('categories-screen').style.display = 'grid';
         }
     </script>
 </body>
