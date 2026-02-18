@@ -10,6 +10,7 @@
             --card-bg: #1e293b;
             --accent-color: #f59e0b;
             --text-primary: #f8fafc;
+            --disabled-color: #475569;
         }
 
         body {
@@ -19,7 +20,6 @@
             align-items: center; min-height: 100vh;
         }
 
-        /* شاشة الدخول */
         #intro-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-color); display: flex; justify-content: center;
@@ -34,7 +34,6 @@
         }
         @keyframes shine { 0% { background-position: -500%; } 100% { background-position: 500%; } }
 
-        /* التايمر العلوي */
         #top-timer-bar {
             display: none; background-color: var(--accent-color);
             color: #432b05; padding: 8px 30px; border-radius: 50px;
@@ -42,7 +41,6 @@
             box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); z-index: 100;
         }
 
-        /* شاشة الفئات */
         #categories-screen {
             display: none; width: 95%; max-width: 1200px;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -60,13 +58,13 @@
             text-align: center; font-weight: bold; cursor: pointer;
             border-radius: 30px; margin: 5px; transition: 0.3s;
         }
-        .point-box:hover { background: var(--accent-color); color: #000; }
+        .point-box:hover:not(.used) { background: var(--accent-color); color: #000; }
+        .point-box.used { opacity: 0.2; cursor: default; }
         .cat-title {
             flex-grow: 1; text-align: center; background: #f1f5f9;
             color: #000; padding: 10px; font-weight: bold; width: 100%;
         }
 
-        /* واجهة اللعبة والمساعدات */
         #game-interface { display: none; width: 98%; justify-content: space-between; margin-top: 20px; }
         .sidebar {
             width: 220px; background: rgba(30, 41, 59, 0.6);
@@ -74,16 +72,26 @@
             text-align: center; border-radius: 15px;
         }
         .score-display { font-size: 3.5rem; font-weight: bold; color: var(--accent-color); }
+        
+        /* تنسيق المساعدات المحدث */
         .help-item {
             display: flex; align-items: center; justify-content: center; gap: 10px; 
             margin-top: 15px; cursor: pointer; font-size: 1rem; padding: 10px;
             background: rgba(255,255,255,0.05); border-radius: 8px;
+            transition: 0.3s; border: 1px solid transparent;
+        }
+        .help-item:hover:not(.used-help) { background: rgba(255,255,255,0.15); }
+        .help-item.used-help {
+            background: var(--accent-color) !important;
+            color: #000 !important;
+            cursor: not-allowed;
+            pointer-events: none;
+            box-shadow: 0 0 10px var(--accent-color);
         }
 
         .question-area { flex-grow: 1; margin: 0 20px; text-align: center; }
         .question-card { background: var(--card-bg); padding: 40px; border-radius: 20px; border: 1px solid #334155; }
         
-        /* أزرار الرصد */
         .winner-selection { display: none; margin-top: 30px; border-top: 1px solid #444; padding-top: 20px; }
         .win-btn {
             background: var(--accent-color); color: #000; border: none;
@@ -126,9 +134,9 @@
             <div id="side-name-1" style="color:var(--accent-color); font-weight:bold;"></div>
             <div class="score-display" id="score1">0</div>
             <div style="border-top:1px solid #444; margin-top:10px; padding-top:10px;">المساعدات</div>
-            <div class="help-item">📞 اتصال بصديق</div>
-            <div class="help-item">✌️ اختيار إجابتين</div>
-            <div class="help-item">🕳️ الحفرة</div>
+            <div class="help-item" onclick="useHelp(this)">📞 اتصال بصديق</div>
+            <div class="help-item" onclick="useHelp(this)">✌️ اختيار إجابتين</div>
+            <div class="help-item" onclick="useHelp(this)">🕳️ الحفرة</div>
         </div>
 
         <div class="question-area" id="q-content"></div>
@@ -137,14 +145,16 @@
             <div id="side-name-2" style="color:var(--accent-color); font-weight:bold;"></div>
             <div class="score-display" id="score2">0</div>
             <div style="border-top:1px solid #444; margin-top:10px; padding-top:10px;">المساعدات</div>
-            <div class="help-item">📞 اتصال بصديق</div>
-            <div class="help-item">✌️ اختيار إجابتين</div>
-            <div class="help-item">🕳️ الحفرة</div>
+            <div class="help-item" onclick="useHelp(this)">📞 اتصال بصديق</div>
+            <div class="help-item" onclick="useHelp(this)">✌️ اختيار إجابتين</div>
+            <div class="help-item" onclick="useHelp(this)">🕳️ الحفرة</div>
         </div>
     </div>
 
     <script>
         let score1 = 0; let score2 = 0; let currentPoints = 0;
+        let lastClickedBox = null;
+
         const bank = {
             "أسئلة دينية": {
                 icon: "🕌",
@@ -205,15 +215,15 @@
                     <div class="cat-card">
                         <div class="cat-main">
                             <div class="points-col">
-                                <div class="point-box" onclick="loadQ('${cat}','left',200)">200</div>
-                                <div class="point-box" onclick="loadQ('${cat}','left',400)">400</div>
-                                <div class="point-box" onclick="loadQ('${cat}','left',600)">600</div>
+                                <div class="point-box" onclick="loadQ('${cat}','left',200, this)">200</div>
+                                <div class="point-box" onclick="loadQ('${cat}','left',400, this)">400</div>
+                                <div class="point-box" onclick="loadQ('${cat}','left',600, this)">600</div>
                             </div>
                             <div style="font-size: 3.5rem;">${bank[cat].icon}</div>
                             <div class="points-col">
-                                <div class="point-box" onclick="loadQ('${cat}','right',200)">200</div>
-                                <div class="point-box" onclick="loadQ('${cat}','right',400)">400</div>
-                                <div class="point-box" onclick="loadQ('${cat}','right',600)">600</div>
+                                <div class="point-box" onclick="loadQ('${cat}','right',200, this)">200</div>
+                                <div class="point-box" onclick="loadQ('${cat}','right',400, this)">400</div>
+                                <div class="point-box" onclick="loadQ('${cat}','right',600, this)">600</div>
                             </div>
                         </div>
                         <div class="cat-title">${cat}</div>
@@ -221,8 +231,10 @@
             });
         }
 
-        function loadQ(cat, side, pts) {
+        function loadQ(cat, side, pts, element) {
+            if(element.classList.contains('used')) return;
             currentPoints = pts;
+            lastClickedBox = element;
             const data = bank[cat][side][pts];
             document.getElementById('categories-screen').style.display = 'none';
             document.getElementById('game-interface').style.display = 'flex';
@@ -250,8 +262,19 @@
         function addPts(team) {
             if(team === 1) { score1 += currentPoints; document.getElementById('score1').innerText = score1; }
             if(team === 2) { score2 += currentPoints; document.getElementById('score2').innerText = score2; }
+            
+            // وسم صندوق السؤال بأنه استُخدم
+            if(lastClickedBox) lastClickedBox.classList.add('used');
+            
             document.getElementById('game-interface').style.display = 'none';
             document.getElementById('categories-screen').style.display = 'grid';
+        }
+
+        // وظيفة المساعدات الجديدة
+        function useHelp(element) {
+            if(!element.classList.contains('used-help')) {
+                element.classList.add('used-help');
+            }
         }
     </script>
 </body>
