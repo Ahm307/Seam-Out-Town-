@@ -44,7 +44,7 @@
 
         /* التايمر العلوي */
         #top-timer-bar {
-            display: none; /* يظهر بعد اللمعان */
+            display: none;
             background-color: var(--accent-color);
             color: #432b05;
             padding: 8px 30px;
@@ -63,34 +63,83 @@
             flex-grow: 1; width: 100%;
         }
 
-        /* واجهة اللعبة الجانبية (المساعدات والنقاط) */
+        /* واجهة اللعبة (المساعدات يمين ويسار) */
         #game-interface {
             display: none;
-            width: 100%;
-            max-width: 1100px;
+            width: 95%;
+            max-width: 1300px;
             justify-content: space-between;
             align-items: flex-start;
             margin-top: 30px;
-            padding: 20px;
+            padding: 10px;
         }
 
         .sidebar {
-            width: 220px;
+            width: 180px;
             background: rgba(30, 41, 59, 0.6);
-            border-left: 3px solid var(--accent-color);
-            padding: 25px;
+            border: 2px solid var(--accent-color);
+            padding: 15px;
             text-align: center;
             border-radius: 15px;
         }
-        .score-display { font-size: 3.5rem; color: var(--accent-color); font-weight: bold; line-height: 1; }
-        .sidebar-title { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; font-size: 1.3rem; margin-bottom: 25px; }
-        
+        .team-name-tag { font-weight: bold; color: var(--accent-color); margin-bottom: 10px; font-size: 1.2rem; }
+        .score-display { font-size: 2.5rem; font-weight: bold; color: #fff; }
         .help-item {
-            display: flex; align-items: center; justify-content: flex-start;
-            gap: 12px; margin-bottom: 20px; cursor: pointer;
-            font-size: 1rem; transition: 0.2s;
+            display: flex; align-items: center; gap: 8px; margin-top: 15px;
+            cursor: pointer; font-size: 0.9rem; background: rgba(255,255,255,0.05);
+            padding: 8px; border-radius: 8px; transition: 0.3s;
         }
-        .help-item:hover { color: var(--accent-color); }
+        .help-item:hover { background: var(--accent-color); color: #000; }
+
+        /* منطقة السؤال */
+        .question-area {
+            flex-grow: 1;
+            margin: 0 20px;
+            text-align: center;
+        }
+        .question-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        .question-image {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 3px solid var(--accent-color);
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .option-btn {
+            background: #21262d;
+            border: 2px solid #30363d;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        .show-answer-btn {
+            margin-top: 25px;
+            background: none;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #correct-answer-text {
+            margin-top: 15px;
+            color: #4ade80;
+            font-weight: bold;
+            display: none;
+        }
 
         /* تنسيق التسجيل */
         .container { width: 90%; max-width: 600px; text-align: center; }
@@ -126,23 +175,42 @@
 
     <div id="game-interface">
         <div class="sidebar">
+            <div id="side-name-1" class="team-name-tag">الفريق 1</div>
             <div class="score-display">0</div>
-            <div class="sidebar-title">المساعدات</div>
-            <div class="help-item">📞 <span>اتصال بصديق</span></div>
-            <div class="help-item">✌️ <span>اختيار إجابتين</span></div>
-            <div class="help-item">🕳️ <span>الحفرة</span></div>
+            <div style="margin: 10px 0; border-top: 1px solid #444;">المساعدات</div>
+            <div class="help-item">📞 اتصال بصديق</div>
+            <div class="help-item">✌️ اختيار إجابتين</div>
+            <div class="help-item">🕳️ الحفرة</div>
         </div>
 
-        <div style="flex-grow: 1; text-align: center;">
-            <h2 id="display-teams-top" style="color: var(--accent-color);"></h2>
-            <div style="background: var(--card-bg); padding: 40px; border-radius: 15px; border: 1px dashed var(--accent-color);">
-                جاري تحضير الأسئلة...
+        <div class="question-area">
+            <div class="question-card">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Operation_Rosario.jpg/300px-Operation_Rosario.jpg" class="question-image" alt="Question Image">
+                <h2 style="margin: 0;">ما هو الاسم الرمزي لهذه العملية العسكرية الأرجنتينية عام 1982؟</h2>
+                
+                <div class="options-grid">
+                    <div class="option-btn">عملية روزاريو</div>
+                    <div class="option-btn">عملية العاصفة</div>
+                    <div class="option-btn">عملية الفجر</div>
+                    <div class="option-btn">عملية الصقر</div>
+                </div>
+
+                <button class="show-answer-btn" onclick="toggleAnswer()">إظهار الإجابة الصحيحة</button>
+                <p id="correct-answer-text">الإجابة الصحيحة هي: عملية روزاريو</p>
             </div>
+        </div>
+
+        <div class="sidebar">
+            <div id="side-name-2" class="team-name-tag">الفريق 2</div>
+            <div class="score-display">0</div>
+            <div style="margin: 10px 0; border-top: 1px solid #444;">المساعدات</div>
+            <div class="help-item">📞 اتصال بصديق</div>
+            <div class="help-item">✌️ اختيار إجابتين</div>
+            <div class="help-item">🕳️ الحفرة</div>
         </div>
     </div>
 
     <script>
-        // التايمر التلقائي
         let seconds = 0;
         function startTimer() {
             setInterval(() => {
@@ -154,14 +222,13 @@
             }, 1000);
         }
 
-        // إخفاء الانترو واظهار التسجيل والتايمر
         setTimeout(() => {
             document.getElementById('intro-screen').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('intro-screen').style.display = 'none';
                 document.getElementById('setup-screen').style.display = 'flex';
                 document.getElementById('top-timer-bar').style.display = 'block';
-                startTimer(); // يبدأ التايمر فور الدخول
+                startTimer();
             }, 1000);
         }, 3000);
 
@@ -174,12 +241,16 @@
                 return;
             }
 
-            // إظهار أسماء الفرق في واجهة اللعبة
-            document.getElementById('display-teams-top').innerText = name1 + " VS " + name2;
+            document.getElementById('side-name-1').innerText = name1;
+            document.getElementById('side-name-2').innerText = name2;
 
-            // الانتقال لواجهة المساعدات واللعب
             document.getElementById('setup-screen').style.display = 'none';
             document.getElementById('game-interface').style.display = 'flex';
+        }
+
+        function toggleAnswer() {
+            const ans = document.getElementById('correct-answer-text');
+            ans.style.display = (ans.style.display === 'block') ? 'none' : 'block';
         }
     </script>
 </body>
