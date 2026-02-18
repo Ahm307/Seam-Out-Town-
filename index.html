@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سيم جيم أوت تاون - رمضان مبارك</title>
+    <title>سيم جيم أوت تاون</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -12,140 +12,148 @@
             --text-primary: #f8fafc;
         }
 
-        body {
+        body, html {
+            height: 100%; margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-primary);
-            margin: 0;
             overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
         }
 
         /* شاشة الدخول اللامعة */
         #intro-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-color);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-color);
             display: flex; justify-content: center; align-items: center;
-            z-index: 9999;
+            z-index: 9999; transition: opacity 1s;
         }
         .shiny-text {
-            font-size: 3.5rem; font-weight: bold;
-            background: linear-gradient(90deg, transparent, #fff, transparent);
-            background-size: 80%; background-repeat: no-repeat;
-            -webkit-background-clip: text; -webkit-text-fill-color: var(--accent-color);
-            animation: shine 2.5s infinite;
+            font-size: 3.5rem; font-weight: bold; color: var(--accent-color);
+            background: linear-gradient(90deg, #f59e0b, #fff, #f59e0b);
+            background-size: 80%; animation: shine 2s linear infinite;
+            -webkit-background-clip: text; -webkit-text-fill-color: rgba(245, 158, 11, 0.2);
         }
         @keyframes shine { 0% { background-position: -500%; } 100% { background-position: 500%; } }
 
-        /* شاشة تسجيل الفرق */
-        #setup-screen {
-            display: none;
-            flex-direction: column; align-items: center; justify-content: center;
-            height: 100vh; width: 100%;
+        #main-content { opacity: 0; transition: opacity 1s; padding: 20px; }
+
+        /* التايمر العلوي البرتقالي */
+        .top-timer {
+            background-color: var(--accent-color);
+            color: #432b05;
+            padding: 8px 30px;
+            border-radius: 50px;
+            font-size: 1.6rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
         }
 
-        /* واجهة اللعبة العلوية */
-        #game-header {
-            display: none;
-            width: 100%;
-            padding: 20px;
+        .game-layout {
+            display: flex;
             justify-content: space-between;
-            align-items: center;
-            background: rgba(30, 41, 59, 0.8);
-            border-bottom: 2px solid var(--accent-color);
+            gap: 30px;
+            max-width: 1100px;
+            margin: 0 auto;
         }
 
-        .team-info { text-align: center; }
-        .team-name-top { font-size: 1.5rem; font-weight: bold; color: var(--accent-color); }
+        /* المساعدات والنقاط (نفس تصميم الصورة) */
+        .sidebar {
+            width: 220px;
+            background: rgba(30, 41, 59, 0.6);
+            border-left: 3px solid var(--accent-color);
+            padding: 25px;
+            text-align: center;
+            border-radius: 15px;
+        }
+        .score-display { font-size: 3.5rem; color: var(--accent-color); font-weight: bold; margin-bottom: 0; }
+        .sidebar-title { 
+            border-top: 1px solid rgba(255,255,255,0.1); 
+            padding-top: 10px; 
+            font-size: 1.3rem; 
+            margin-bottom: 25px; 
+            color: var(--text-primary);
+        }
+        .help-item {
+            display: flex; align-items: center; justify-content: flex-start;
+            gap: 12px; margin-bottom: 20px; cursor: pointer;
+            font-size: 1rem; color: var(--text-primary);
+            transition: 0.2s;
+        }
+        .help-item:hover { color: var(--accent-color); }
+
+        .teams-section { flex-grow: 1; text-align: center; }
+        .team-input-group { margin-bottom: 25px; max-width: 500px; margin-left: auto; margin-right: auto; }
+        .team-label { background: var(--accent-color); color: #000; padding: 12px; border-radius: 10px 10px 0 0; font-weight: bold; font-size: 1.1rem; }
+        input { width: 100%; padding: 18px; background: #21262d; border: 2px solid #30363d; color: #fff; text-align: center; border-radius: 0 0 10px 10px; box-sizing: border-box; font-size: 1.1rem; }
         
-        .help-icons { display: flex; gap: 15px; }
-        .icon-circle {
-            width: 50px; height: 50px;
-            border-radius: 50%;
-            border: 2px solid var(--accent-color);
-            display: flex; justify-content: center; align-items: center;
-            font-size: 1.2rem; cursor: pointer;
-            transition: 0.3s;
-        }
-        .icon-circle:hover { background: var(--accent-color); color: #000; }
-
-        .container { width: 90%; max-width: 600px; text-align: center; margin-top: 50px; }
-        .team-box { background: var(--card-bg); border-radius: 10px; margin-bottom: 20px; }
-        .team-label { background: var(--accent-color); color: #000; padding: 10px; border-radius: 10px 10px 0 0; font-weight: bold; }
-        input { width: 100%; padding: 15px; background: #21262d; border: none; color: #fff; text-align: center; box-sizing: border-box; }
-        .start-btn { background: var(--accent-color); padding: 15px 50px; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; margin-top: 20px; }
-
-        #ramadan-msg { color: var(--accent-color); font-size: 1.2rem; margin-top: 10px; }
+        .start-btn { background: var(--accent-color); color: #000; padding: 15px 50px; border: none; font-weight: bold; border-radius: 10px; cursor: pointer; font-size: 1.2rem; transition: 0.3s; }
+        .start-btn:hover { transform: scale(1.05); }
     </style>
 </head>
 <body>
 
     <div id="intro-screen"><div class="shiny-text">سيم جيم أوت تاون</div></div>
 
-    <div id="game-header">
-        <div class="team-info">
-            <div id="display-team1" class="team-name-top">الفريق 1</div>
-            <div class="help-icons">
-                <div class="icon-circle" title="اتصال بصديق">📞</div>
-                <div class="icon-circle" title="اختيار إجابة">✌️</div>
+    <div id="main-content">
+        <center>
+            <div class="top-timer" id="game-timer">00:00</div>
+            <br>
+            <div style="background: rgba(245, 158, 11, 0.1); padding: 12px 25px; border-radius: 10px; border: 1px solid var(--accent-color); margin-bottom: 40px; display: inline-block;">
+                🌙 رمضان مبارك - تم إطلاق نسخة أوت تاون
             </div>
-        </div>
-        <div style="font-size: 1.5rem;">🌙</div>
-        <div class="team-info">
-            <div id="display-team2" class="team-name-top">الفريق 2</div>
-            <div class="help-icons">
-                <div class="icon-circle" title="اتصال بصديق">📞</div>
-                <div class="icon-circle" title="اختيار إجابة">✌️</div>
-            </div>
-        </div>
-    </div>
+        </center>
 
-    <div id="setup-screen">
-        <h1>🌙 رمضان مبارك</h1>
-        <p id="ramadan-msg">تم إطلاق النسخة الرمضانية من أوت تاون!</p>
-        <div class="container">
-            <div class="team-box">
-                <div class="team-label">الفريق الأول</div>
-                <input type="text" id="t1" value="را">
+        <div class="game-layout">
+            <div class="sidebar">
+                <div class="score-display">0</div>
+                <div class="sidebar-title">المساعدات</div>
+                <div class="help-item">📞 <span>اتصال بصديق</span></div>
+                <div class="help-item">✌️ <span>اختيار إجابتين</span></div>
+                <div class="help-item">🕳️ <span>الحفرة</span></div>
             </div>
-            <div class="team-box">
-                <div class="team-label">الفريق الثاني</div>
-                <input type="text" id="t2" placeholder="أدخل اسم الفريق الثاني">
+
+            <div class="teams-section">
+                <h1 style="color: var(--accent-color); font-size: 3.5rem; margin-top: 0;">أسماء الفرق</h1>
+                <div class="team-input-group">
+                    <div class="team-label">الفريق الأول</div>
+                    <input type="text" id="team1" value="را">
+                </div>
+                <div class="team-input-group">
+                    <div class="team-label">الفريق الثاني</div>
+                    <input type="text" id="team2" placeholder="أدخل اسم الفريق الثاني">
+                </div>
+                <button class="start-btn">ابدأ اللعب</button>
+                <div style="color: #ef4444; margin-top: 15px; font-weight: bold;">يجب إدخال اسم الفريق الثاني</div>
             </div>
-            <button class="start-btn" onclick="startGame()">ابدأ اللعب</button>
         </div>
     </div>
 
     <script>
-        // اخفاء الانترو واظهار التسجيل
-        setTimeout(() => {
-            document.getElementById('intro-screen').style.display = 'none';
-            document.getElementById('setup-screen').style.display = 'flex';
-        }, 3000);
-
-        function startGame() {
-            const name1 = document.getElementById('t1').value;
-            const name2 = document.getElementById('t2').value;
-
-            if(name2 === "") {
-                alert("يجب إدخال اسم الفريق الثاني");
-                return;
-            }
-
-            // تحديث الأسماء في الأعلى
-            document.getElementById('display-team1').innerText = name1;
-            document.getElementById('display-team2').innerText = name2;
-
-            // تبديل الواجهات
-            document.getElementById('setup-screen').style.display = 'none';
-            document.getElementById('game-header').style.display = 'flex';
-            
-            alert("تم تسجيل الفرق! وسائل المساعدة جاهزة في الأعلى.");
+        // نظام التايمر
+        let seconds = 0;
+        function startTimer() {
+            setInterval(() => {
+                seconds++;
+                let mins = Math.floor(seconds / 60);
+                let secs = seconds % 60;
+                document.getElementById('game-timer').innerText = 
+                    (mins < 10 ? "0" + mins : mins) + ":" + (secs < 10 ? "0" + secs : secs);
+            }, 1000);
         }
+
+        // حركة الدخول واللمعان
+        setTimeout(() => {
+            const intro = document.getElementById('intro-screen');
+            const main = document.getElementById('main-content');
+            intro.style.opacity = '0';
+            setTimeout(() => {
+                intro.style.display = 'none';
+                main.style.opacity = '1';
+                startTimer();
+            }, 1000);
+        }, 3000);
     </script>
 </body>
 </html>
