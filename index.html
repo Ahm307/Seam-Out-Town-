@@ -20,6 +20,49 @@
             align-items: center; min-height: 100vh;
         }
 
+        /* --- التنبيه الإداري (تغطية كاملة + وميض أحمر وأسود) --- */
+        #admin-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.95); 
+            display: none; flex-direction: column; justify-content: center;
+            align-items: center; z-index: 20000; text-align: center;
+            border: 0px solid red;
+            animation: border-flash 0.3s infinite alternate;
+        }
+        
+        @keyframes border-flash {
+            from { box-shadow: inset 0 0 50px red; }
+            to { box-shadow: inset 0 0 150px #000; }
+        }
+
+        .flashing-title {
+            color: #ff0000; font-size: 2.5rem; margin-bottom: 20px;
+            animation: blink 0.2s infinite alternate; font-weight: 900;
+            text-shadow: 0 0 15px red;
+        }
+        .flashing-msg {
+            color: #fff; font-size: 4rem; font-weight: 900;
+            padding: 0 20px; text-shadow: 0 0 30px #fff;
+            animation: shake 0.1s infinite;
+        }
+
+        @keyframes blink {
+            from { opacity: 1; } to { opacity: 0.1; }
+        }
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            40% { transform: translate(3px, 2px) rotate(-1deg); }
+            60% { transform: translate(-1px, -1px) rotate(1deg); }
+            80% { transform: translate(-3px, 1px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        #admin-trigger {
+            position: fixed; bottom: 0; left: 0; width: 50px; height: 50px;
+            background: transparent; cursor: pointer; z-index: 1000;
+        }
+
         /* شاشة الدخول */
         #intro-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -34,23 +77,6 @@
             animation: shine 2.5s infinite;
         }
         @keyframes shine { 0% { background-position: -500%; } 100% { background-position: 500%; } }
-
-        /* التنبيه الإداري الاحترافي */
-        #admin-alert {
-            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 500px; background: var(--accent-color);
-            color: #000; padding: 20px; border-radius: 15px; text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 10000;
-            transition: top 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-        }
-        #admin-alert h3 { margin: 0 0 10px 0; font-size: 1.2rem; border-bottom: 1px solid rgba(0,0,0,0.1); }
-        #admin-alert p { margin: 0; font-weight: bold; font-size: 1.4rem; }
-
-        /* زر الإدارة المخفي (في الزاوية) */
-        #admin-trigger {
-            position: fixed; bottom: 10px; left: 10px; width: 20px; height: 20px;
-            background: transparent; cursor: pointer; z-index: 1000;
-        }
 
         #top-timer-bar {
             display: none; background-color: var(--accent-color);
@@ -124,9 +150,9 @@
 </head>
 <body>
 
-    <div id="admin-alert">
-        <h3>📢 إدارة أوت تاون</h3>
-        <p id="alert-text">رسالة إدارية</p>
+    <div id="admin-overlay">
+        <div class="flashing-title">📢 الـمـطـور جـنـازة 📢</div>
+        <div class="flashing-msg" id="alert-text">إخلاء الموقع فوراً</div>
     </div>
 
     <div id="admin-trigger" onclick="openAdminPanel()"></div>
@@ -176,7 +202,53 @@
     <script>
         let score1 = 0; let score2 = 0; let currentPoints = 0;
         let lastClickedBox = null;
+        
+        // إنشاء صوت الإنذار برمجياً (تجنباً لروابط قد تنكسر)
+        const sirenContext = new (window.AudioContext || window.webkitAudioContext)();
+        let sirenInterval;
 
+        function playSiren() {
+            if(sirenContext.state === 'suspended') sirenContext.resume();
+            let osc = sirenContext.createOscillator();
+            let gain = sirenContext.createGain();
+            osc.connect(gain);
+            gain.connect(sirenContext.destination);
+            
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(300, sirenContext.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(800, sirenContext.currentTime + 1);
+            
+            gain.gain.setValueAtTime(0.1, sirenContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, sirenContext.currentTime + 1);
+            
+            osc.start();
+            osc.stop(sirenContext.currentTime + 1);
+        }
+
+        function openAdminPanel() {
+            let pass = prompt("تحقق الهوية (المطور جنازة):");
+            if(pass === "123") {
+                let msg = prompt("أدخل رسالة الإنذار:");
+                if(msg) sendGlobalAlert(msg);
+            }
+        }
+
+        function sendGlobalAlert(text) {
+            const overlay = document.getElementById('admin-overlay');
+            const alertText = document.getElementById('alert-text');
+            alertText.innerText = text;
+            overlay.style.display = "flex";
+
+            // بدء صوت الإنذار المتكرر
+            sirenInterval = setInterval(playSiren, 1000);
+
+            setTimeout(() => {
+                overlay.style.display = "none";
+                clearInterval(sirenInterval);
+            }, 8000); // يستمر لـ 8 ثواني
+        }
+
+        // --- باقي وظائف اللعبة الأصلية ---
         const bank = {
             "أسئلة دينية": {
                 icon: "🕌",
@@ -204,32 +276,6 @@
                 right: { 200: {q:"ما هي مساحة المملكة العربية السعودية تقريباً؟", a:"2 مليون كم²"}, 400: {q:"متى تم تأسيس دولة الإمارات العربية المتحدة؟", a:"1971م"}, 600: {q:"ما هي الدولة العربية التي تسمى ببلاد المليون شهيد؟", a:"الجزائر"} }
             }
         };
-
-        // --- وظائف الإدارة الجديدة ---
-        function openAdminPanel() {
-            let pass = prompt("أدخل كلمة مرور الإدارة:");
-            if(pass === "123") { // كلمة المرور الافتراضية
-                let msg = prompt("أدخل الرسالة المراد إرسالها لجميع المتواجدين:");
-                if(msg) {
-                    sendGlobalAlert(msg);
-                }
-            } else {
-                alert("عذراً، لا تملك صلاحية الوصول.");
-            }
-        }
-
-        function sendGlobalAlert(text) {
-            const alertBox = document.getElementById('admin-alert');
-            const alertText = document.getElementById('alert-text');
-            alertText.innerText = text;
-            alertBox.style.top = "20px"; // إظهار التنبيه
-
-            // إخفاء التنبيه تلقائياً بعد 5 ثواني
-            setTimeout(() => {
-                alertBox.style.top = "-150px";
-            }, 5000);
-        }
-        // ---------------------------
 
         function startTimer() {
             let s = 0; setInterval(() => {
@@ -323,4 +369,3 @@
     </script>
 </body>
 </html>
- 
