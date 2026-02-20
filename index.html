@@ -20,6 +20,7 @@
             align-items: center; min-height: 100vh;
         }
 
+        /* شاشة الدخول */
         #intro-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-color); display: flex; justify-content: center;
@@ -33,6 +34,23 @@
             animation: shine 2.5s infinite;
         }
         @keyframes shine { 0% { background-position: -500%; } 100% { background-position: 500%; } }
+
+        /* التنبيه الإداري الاحترافي */
+        #admin-alert {
+            position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 500px; background: var(--accent-color);
+            color: #000; padding: 20px; border-radius: 15px; text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 10000;
+            transition: top 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        #admin-alert h3 { margin: 0 0 10px 0; font-size: 1.2rem; border-bottom: 1px solid rgba(0,0,0,0.1); }
+        #admin-alert p { margin: 0; font-weight: bold; font-size: 1.4rem; }
+
+        /* زر الإدارة المخفي (في الزاوية) */
+        #admin-trigger {
+            position: fixed; bottom: 10px; left: 10px; width: 20px; height: 20px;
+            background: transparent; cursor: pointer; z-index: 1000;
+        }
 
         #top-timer-bar {
             display: none; background-color: var(--accent-color);
@@ -73,20 +91,17 @@
         }
         .score-display { font-size: 3.5rem; font-weight: bold; color: var(--accent-color); }
         
-        /* تنسيق المساعدات المحدث */
         .help-item {
             display: flex; align-items: center; justify-content: center; gap: 10px; 
             margin-top: 15px; cursor: pointer; font-size: 1rem; padding: 10px;
             background: rgba(255,255,255,0.05); border-radius: 8px;
             transition: 0.3s; border: 1px solid transparent;
         }
-        .help-item:hover:not(.used-help) { background: rgba(255,255,255,0.15); }
         .help-item.used-help {
             background: var(--accent-color) !important;
             color: #000 !important;
             cursor: not-allowed;
             pointer-events: none;
-            box-shadow: 0 0 10px var(--accent-color);
         }
 
         .question-area { flex-grow: 1; margin: 0 20px; text-align: center; }
@@ -108,6 +123,13 @@
     </style>
 </head>
 <body>
+
+    <div id="admin-alert">
+        <h3>📢 إدارة أوت تاون</h3>
+        <p id="alert-text">رسالة إدارية</p>
+    </div>
+
+    <div id="admin-trigger" onclick="openAdminPanel()"></div>
 
     <div id="intro-screen"><div class="shiny-text">سيم جيم أوت تاون</div></div>
     <div id="top-timer-bar">00:00</div>
@@ -182,6 +204,32 @@
                 right: { 200: {q:"ما هي مساحة المملكة العربية السعودية تقريباً؟", a:"2 مليون كم²"}, 400: {q:"متى تم تأسيس دولة الإمارات العربية المتحدة؟", a:"1971م"}, 600: {q:"ما هي الدولة العربية التي تسمى ببلاد المليون شهيد؟", a:"الجزائر"} }
             }
         };
+
+        // --- وظائف الإدارة الجديدة ---
+        function openAdminPanel() {
+            let pass = prompt("أدخل كلمة مرور الإدارة:");
+            if(pass === "123") { // كلمة المرور الافتراضية
+                let msg = prompt("أدخل الرسالة المراد إرسالها لجميع المتواجدين:");
+                if(msg) {
+                    sendGlobalAlert(msg);
+                }
+            } else {
+                alert("عذراً، لا تملك صلاحية الوصول.");
+            }
+        }
+
+        function sendGlobalAlert(text) {
+            const alertBox = document.getElementById('admin-alert');
+            const alertText = document.getElementById('alert-text');
+            alertText.innerText = text;
+            alertBox.style.top = "20px"; // إظهار التنبيه
+
+            // إخفاء التنبيه تلقائياً بعد 5 ثواني
+            setTimeout(() => {
+                alertBox.style.top = "-150px";
+            }, 5000);
+        }
+        // ---------------------------
 
         function startTimer() {
             let s = 0; setInterval(() => {
@@ -262,15 +310,11 @@
         function addPts(team) {
             if(team === 1) { score1 += currentPoints; document.getElementById('score1').innerText = score1; }
             if(team === 2) { score2 += currentPoints; document.getElementById('score2').innerText = score2; }
-            
-            // وسم صندوق السؤال بأنه استُخدم
             if(lastClickedBox) lastClickedBox.classList.add('used');
-            
             document.getElementById('game-interface').style.display = 'none';
             document.getElementById('categories-screen').style.display = 'grid';
         }
 
-        // وظيفة المساعدات الجديدة
         function useHelp(element) {
             if(!element.classList.contains('used-help')) {
                 element.classList.add('used-help');
@@ -279,3 +323,4 @@
     </script>
 </body>
 </html>
+ 
