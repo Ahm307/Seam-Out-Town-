@@ -63,8 +63,9 @@
         .score-display { font-size: 3.5rem; font-weight: bold; color: var(--accent-color); }
         
         /* وسائل المساعدة */
-        .help-btn { background: #334155; color: white; border: 1px solid var(--accent-color); padding: 10px; margin: 5px 0; width: 100%; border-radius: 8px; cursor: pointer; font-size: 0.9rem; }
-        .help-btn.used { opacity: 0.3; text-decoration: line-through; }
+        .help-btn { background: #334155; color: white; border: 1px solid var(--accent-color); padding: 10px; margin: 5px 0; width: 100%; border-radius: 8px; cursor: pointer; font-size: 0.9rem; transition: 0.3s; }
+        .help-btn:hover { background: var(--accent-color); color: #000; }
+        .help-btn.used { opacity: 0.3; text-decoration: line-through; pointer-events: none; }
 
         .question-card { background: var(--card-bg); padding: 40px; border-radius: 20px; text-align: center; flex-grow: 1; margin: 0 20px; }
         .win-btn { background: var(--accent-color); color: #000; border: none; padding: 15px 30px; margin: 10px; border-radius: 10px; font-weight: bold; cursor: pointer; }
@@ -100,9 +101,10 @@
         <div class="sidebar">
             <div id="side-name-1" style="color:var(--accent-color); font-weight:bold;"></div>
             <div class="score-display" id="score1">0</div>
-            <hr border="1" color="#f59e0b">
+            <hr border="1" color="#f59e0b" style="margin: 15px 0;">
             <button class="help-btn" onclick="this.classList.add('used')">📞 اتصال بصديق</button>
-            <button class="help-btn" onclick="this.classList.add('used')">✂️ حذف إجابة</button>
+            <button class="help-btn" onclick="this.classList.add('used')">✌️ اختيار اجابتين</button>
+            <button class="help-btn" onclick="this.classList.add('used')">🕳️ الحفرة</button>
         </div>
 
         <div class="question-card" id="q-content"></div>
@@ -110,9 +112,10 @@
         <div class="sidebar">
             <div id="side-name-2" style="color:var(--accent-color); font-weight:bold;"></div>
             <div class="score-display" id="score2">0</div>
-            <hr border="1" color="#f59e0b">
+            <hr border="1" color="#f59e0b" style="margin: 15px 0;">
             <button class="help-btn" onclick="this.classList.add('used')">📞 اتصال بصديق</button>
-            <button class="help-btn" onclick="this.classList.add('used')">✂️ حذف إجابة</button>
+            <button class="help-btn" onclick="this.classList.add('used')">✌️ اختيار اجابتين</button>
+            <button class="help-btn" onclick="this.classList.add('used')">🕳️ الحفرة</button>
         </div>
     </div>
 
@@ -134,7 +137,6 @@
         const db = getDatabase(app);
         const alertRef = ref(db, 'system_alert');
 
-        // استقبال الرسالة من Firebase
         onValue(alertRef, (snapshot) => {
             const msg = snapshot.val();
             if(msg && msg !== "") {
@@ -145,7 +147,6 @@
             }
         });
 
-        // وظيفة الإرسال من الموقع (للمطور)
         window.adminAuth = function() {
             let p = prompt("هوية المطور:");
             if(p === "123") {
@@ -155,7 +156,6 @@
         };
 
         window.closeAlert = function() {
-            // عند الإغلاق نمسح الرسالة من القاعدة عشان ما تطلع للي يدخلون جديد
             set(alertRef, "");
         };
     </script>
@@ -171,7 +171,7 @@
             },
             "السيارات": {
                 icon: "🚗",
-                left: { 200: {q:"ما هي الدولة المصنعة لسيارات لمبورغيني؟", a:"إيطاليا"}, 400: {q:"ماذا تسمى القطعة التي تبرد محرك السيارة؟", a:"الرديتر (Radiator)"}, 600: {q:"ما هو اسم نظام الدفع الرباعي في سيارات أودي؟", a:"كواترو (Quattro)"} },
+                left: { 200: {q:"ما هي الدولة المصنعة لسيارات لمبورغيني؟", a:"إيطاليا"}, 400: {q:"ماذا تسمى القطعة التي تبرد محرك السيارة؟", a:"الرديتر (Radiator)"}, 600: {q:"ما هو اسم نظام الدفع الرباعي في سيارات أودي?؟", a:"كواترو (Quattro)"} },
                 right: { 200: {q:"ما هي الماركة التي يرمز لها بـ 4 حلقات متصلة؟", a:"أودي (Audi)"}, 400: {q:"ما هو اسم أول سيارة أطلقتها شركة تيسلا؟", a:"رودستر (Roadster)"}, 600: {q:"في أي مدينة يقع مقر شركة بي إم دبليو؟", a:"ميونخ، ألمانيا"} }
             },
             "الجغرافيا": {
@@ -186,7 +186,7 @@
             },
             "الدول العربية": {
                 icon: "🏙️",
-                left: { 200: {q:"ما هي عاصمة الصومال؟", a:"مقديشو"}, 400: {q:"ما هي أكبر دولة عربية من حيث المساحة?؟", a:"الجزائر"}, 600: {q:"أي دولة عربية يمر بها خط الاستواء؟", a:"الصومال"} },
+                left: { 200: {q:"ما هي عاصمة الصومال؟", a:"مقديشو"}, 400: {q:"ما هي أكبر دولة عربية من حيث المساحة؟", a:"الجزائر"}, 600: {q:"أي دولة عربية يمر بها خط الاستواء؟", a:"الصومال"} },
                 right: { 200: {q:"ما هو لقب مدينة القدس؟", a:"زهرة المداين"}, 400: {q:"في أي مدينة يقع جامع الزيتونة؟", a:"تونس العاصمة"}, 600: {q:"ما هي الدولة العربية التي تعتبر أكبر مصدر للنفط في العالم؟", a:"السعودية"} }
             }
         };
@@ -232,12 +232,12 @@
             document.getElementById('categories-screen').style.display = 'none';
             document.getElementById('game-interface').style.display = 'flex';
             document.getElementById('q-content').innerHTML = `
-                <h2>${cat} - ${pts} نقطة</h2>
-                <p style="font-size:2rem; margin:30px 0;">${data.q}</p>
-                <p id="ans" style="display:none; color:#4ade80; font-weight:bold; font-size:1.8rem;">الإجابة: ${data.a}</p>
+                <h2 style="color:var(--accent-color)">${cat} - ${pts} نقطة</h2>
+                <p style="font-size:2.2rem; margin:30px 0; line-height:1.4;">${data.q}</p>
+                <p id="ans" style="display:none; color:#4ade80; font-weight:bold; font-size:1.8rem; background: rgba(0,0,0,0.3); padding:10px; border-radius:10px;">الإجابة: ${data.a}</p>
                 <button class="win-btn" id="rev-btn" onclick="document.getElementById('ans').style.display='block'; this.style.display='none'; document.getElementById('win-area').style.display='block';">إظهار الإجابة</button>
                 <div id="win-area" style="display:none; margin-top:20px;">
-                    <p>من الفائز؟</p>
+                    <p style="font-weight:bold;">من الفائز بالنقاط؟</p>
                     <button class="win-btn" onclick="addPts(1)">${document.getElementById('t1').value}</button>
                     <button class="win-btn" onclick="addPts(2)">${document.getElementById('t2').value}</button>
                     <button class="win-btn no-one-btn" onclick="addPts(0)">لا أحد</button>
@@ -248,9 +248,7 @@
             if(team === 1) { score1 += currentPoints; document.getElementById('score1').innerText = score1; }
             else if(team === 2) { score2 += currentPoints; document.getElementById('score2').innerText = score2; }
             
-            if(team !== 0) lastBox.classList.add('used'); // إذا "لا أحد" ما نحرق السؤال؟ أو تبي تحرقه؟ حالياً بيتحرق
             lastBox.classList.add('used');
-
             document.getElementById('game-interface').style.display = 'none';
             document.getElementById('categories-screen').style.display = 'grid';
         }
