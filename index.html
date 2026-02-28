@@ -130,6 +130,7 @@
 
     <script>
         const rankPoints = {1:3, 2:5, 3:7, 4:9, 5:11, 6:13, 7:15, 8:17, 9:19, 10:21};
+        let currentCat = "", currentSide = "", currentPts = 0;
 
         window.adminAuth = function() {
             let p = prompt("هوية المطور:");
@@ -213,13 +214,23 @@
             document.getElementById('setup-screen').style.display = 'none';
             document.getElementById('top-timer-bar').style.display = 'block';
             startTimer();
+            renderCategories();
+        }
+
+        function renderCategories() {
             const screen = document.getElementById('categories-screen');
             screen.style.display = 'grid'; screen.innerHTML = "";
             Object.keys(bank).forEach(cat => {
                 const isSpec = bank[cat].isSpecial;
                 let rowsLeft = "", rowsRight = "";
-                Object.keys(bank[cat].left).forEach(p => { rowsLeft += `<div class="point-box ${isSpec?'order-pts':''}" onclick="loadQ('${cat}','left',${p}, this)">${p}</div>`; });
-                Object.keys(bank[cat].right).forEach(p => { rowsRight += `<div class="point-box ${isSpec?'order-pts':''}" onclick="loadQ('${cat}','right',${p}, this)">${p}</div>`; });
+                Object.keys(bank[cat].left).forEach(p => { 
+                    let isUsed = bank[cat].left[p].used ? 'used' : '';
+                    rowsLeft += `<div id="box-${cat}-left-${p}" class="point-box ${isSpec?'order-pts':''} ${isUsed}" onclick="loadQ('${cat}','left',${p}, this)">${p}</div>`; 
+                });
+                Object.keys(bank[cat].right).forEach(p => { 
+                    let isUsed = bank[cat].right[p].used ? 'used' : '';
+                    rowsRight += `<div id="box-${cat}-right-${p}" class="point-box ${isSpec?'order-pts':''} ${isUsed}" onclick="loadQ('${cat}','right',${p}, this)">${p}</div>`; 
+                });
                 screen.innerHTML += `<div class="cat-card ${isSpec?'special':''}">
                     <div class="cat-main"> <div class="points-col">${rowsLeft}</div> <div style="font-size: 3rem;">${bank[cat].icon}</div> <div class="points-col">${rowsRight}</div> </div>
                     <div class="cat-title">${cat}</div> </div>`;
@@ -227,7 +238,8 @@
         }
 
         function loadQ(cat, side, pts, el) {
-            if(el.classList.contains('used')) return;
+            if(bank[cat][side][pts].used) return;
+            currentCat = cat; currentSide = side; currentPts = pts;
             currentPoints = pts; lastBox = el;
             const data = bank[cat][side][pts];
             const isOrder = bank[cat].isSpecial;
@@ -235,7 +247,7 @@
             document.getElementById('categories-screen').style.display = 'none';
             document.getElementById('game-interface').style.display = 'flex';
 
-            let html = `<h2 style="color:${isOrder ? '#0ea5e9' : 'var(--accent-color)'}">${cat}</h2>
+            let html = `<h2 style="color:${isOrder ? '#0ea5e9' : 'var(--accent-color)'}">${cat} (${pts})</h2>
                         <p style="font-size:2rem; margin:20px 0; line-height:1.4;">${data.q}</p>`;
 
             if (isOrder) {
@@ -255,7 +267,7 @@
                         </div>
                     </div>`;
                 });
-                html += `</div><button class="win-btn" onclick="finishQuestion()">إنهاء السؤال</button>`;
+                html += `</div><button class="win-btn" onclick="nextRound()">الجولة التالية</button>`;
             } else {
                 html += `<div id="ans" style="display:none; text-align:center; color:#4ade80; font-weight:bold; font-size:1.8rem; background:rgba(0,0,0,0.5); padding:20px; border-radius:10px; margin-bottom:20px;">${data.a}</div>
                          <button class="win-btn" id="rev-btn" onclick="document.getElementById('ans').style.display='block'; this.style.display='none'; document.getElementById('win-area').style.display='block';">إظهار الإجابة</button>
@@ -276,10 +288,28 @@
             document.getElementById(`order-btns-${rank}`).style.display = "none";
         }
 
+        function nextRound() {
+            // مارك السؤال الحالي كـ مستخدم
+            bank[currentCat][currentSide][currentPts].used = true;
+            
+            // البحث عن النقاط التالية في نفس الفئة والجهة
+            const allPts = Object.keys(bank[currentCat][currentSide]).map(Number).sort((a,b)=>a-b);
+            const currentIndex = allPts.indexOf(currentPts);
+            
+            if (currentIndex !== -1 && currentIndex < allPts.length - 1) {
+                // يوجد سؤال تالي
+                const nextPts = allPts[currentIndex + 1];
+                loadQ(currentCat, currentSide, nextPts, null);
+            } else {
+                // لا يوجد سؤال تالي، العودة للرئيسية
+                finishQuestion();
+            }
+        }
+
         function finishQuestion() {
-            lastBox.classList.add('used');
+            bank[currentCat][currentSide][currentPts].used = true;
             document.getElementById('game-interface').style.display = 'none';
-            document.getElementById('categories-screen').style.display = 'grid';
+            renderCategories();
         }
 
         function addPts(team) {
@@ -298,4 +328,3 @@
     </script>
 </body>
 </html>
- 
