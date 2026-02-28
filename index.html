@@ -62,20 +62,23 @@
 
         #game-interface { display: none; width: 98%; justify-content: space-between; margin-top: 20px; }
         .sidebar { width: 220px; background: rgba(30, 41, 59, 0.6); border: 2px solid var(--accent-color); padding: 15px; border-radius: 15px; text-align: center;}
-        .score-display { font-size: 3.5rem; font-weight: bold; color: var(--accent-color); }
         
+        .score-display { font-size: 3.5rem; font-weight: bold; color: var(--accent-color); cursor: pointer; transition: 0.3s; }
+        .score-display:hover { color: #fff; transform: scale(1.1); }
+
         .help-btn { background: #334155; color: white; border: 1px solid var(--accent-color); padding: 10px; margin: 5px 0; width: 100%; border-radius: 8px; cursor: pointer; font-size: 0.9rem; transition: 0.3s; }
         .help-btn.used { opacity: 0.3; text-decoration: line-through; pointer-events: none; }
+        .reset-btn { background: #ef4444 !important; border-color: #f87171 !important; margin-top: 20px !important; }
 
         .question-card { background: var(--card-bg); padding: 40px; border-radius: 20px; text-align: center; flex-grow: 1; margin: 0 20px; }
         .win-btn { background: var(--accent-color); color: #000; border: none; padding: 15px 30px; margin: 10px; border-radius: 10px; font-weight: bold; cursor: pointer; }
         .no-one-btn { background: #64748b; color: white; }
 
-        /* ستايل أزرار الترتيب */
-        .order-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 700px; margin: 20px auto; }
-        .order-item { background: #1e293b; border: 2px solid #334155; padding: 18px; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.3s; text-align: right; }
-        .order-item:hover { border-color: var(--order-color); }
-        .order-item.revealed { border-color: var(--order-color); background: #0f172a; }
+        .order-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 800px; margin: 20px auto; }
+        .order-item { background: #1e293b; border: 2px solid #334155; padding: 10px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .order-ans-text { display: none; font-size: 1.2rem; color: #4ade80; font-weight: bold; text-align: center; margin-bottom: 5px; }
+        .order-rank-label { color: #64748b; font-size: 0.9rem; }
+        .order-give-btn { padding: 8px; font-size: 0.8rem; width: 100%; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; }
 
         #setup-screen { display: none; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; }
         input { width: 300px; padding: 15px; background: #21262d; border: 1px solid var(--accent-color); color: #fff; text-align: center; margin-bottom: 15px; border-radius: 8px;}
@@ -105,18 +108,19 @@
     <div id="game-interface">
         <div class="sidebar">
             <div id="side-name-1" style="color:var(--accent-color); font-weight:bold;"></div>
-            <div class="score-display" id="score1">0</div>
+            <div class="score-display" id="score1" onclick="manualEdit(1)">0</div>
             <hr border="1" color="#f59e0b" style="margin: 15px 0;">
             <button class="help-btn" onclick="this.classList.add('used')">📞 اتصال بصديق</button>
             <button class="help-btn" onclick="this.classList.add('used')">✌️ اختيار اجابتين</button>
             <button class="help-btn" onclick="this.classList.add('used')">🕳️ الحفرة</button>
+            <button class="help-btn reset-btn" onclick="resetGame()">🔄 تصفير اللعبة</button>
         </div>
 
         <div class="question-card" id="q-content"></div>
 
         <div class="sidebar">
             <div id="side-name-2" style="color:var(--accent-color); font-weight:bold;"></div>
-            <div class="score-display" id="score2">0</div>
+            <div class="score-display" id="score2" onclick="manualEdit(2)">0</div>
             <hr border="1" color="#f59e0b" style="margin: 15px 0;">
             <button class="help-btn" onclick="this.classList.add('used')">📞 اتصال بصديق</button>
             <button class="help-btn" onclick="this.classList.add('used')">✌️ اختيار اجابتين</button>
@@ -125,6 +129,8 @@
     </div>
 
     <script>
+        const rankPoints = {1:3, 2:5, 3:7, 4:9, 5:11, 6:13, 7:15, 8:17, 9:19, 10:21};
+
         window.adminAuth = function() {
             let p = prompt("هوية المطور:");
             if(p === "123") {
@@ -137,6 +143,21 @@
         };
 
         window.closeAlert = function() { document.getElementById('admin-overlay').style.display = "none"; };
+
+        function manualEdit(team) {
+            let name = document.getElementById(`side-name-${team}`).innerText;
+            let val = prompt(`تعديل نقاط فريق ${name}:`, team === 1 ? score1 : score2);
+            if(val !== null && !isNaN(val)) {
+                if(team === 1) { score1 = parseInt(val); document.getElementById('score1').innerText = score1; }
+                else { score2 = parseInt(val); document.getElementById('score2').innerText = score2; }
+            }
+        }
+
+        function resetGame() {
+            if(confirm("هل أنت متأكد من تصفير النقاط واللعبة؟")) {
+                location.reload();
+            }
+        }
 
         let score1 = 0, score2 = 0, currentPoints = 0, lastBox = null;
 
@@ -172,7 +193,7 @@
                     1000: {q:"رتب أكثر 10 أندية تحقيقاً لدوري أبطال أوروبا", a:"1. ريال مدريد (15) 2. ميلان (7) 3. ليفربول (6) 4. بايرن ميونخ (6) 5. برشلونة (5) 6. أياكس (4) 7. مانشستر يونايتد (3) 8. انتر ميلان (3) 9. يوفنتوس (2) 10. بنفيكا (2)"}
                 },
                 right: { 
-                    200: {q:"رتب أكثر 10 شركات سيارات مبيعاً في العالم", a:"1. تويوتا 2. فولكس فاجن 3. فورد 4. هيونداي 5. هوندا 6. نيسان 7. جنرال موتورز 8. كيا 9. بي إم دبليو 10. مرسيدس"}, 
+                    200: {q:"رتب أكثر 10 شركات سيارات مبيعاً في العالم", a:"1. تويوتا 2. فولكس فاجن 3. فورد 4. هيونداي 5. هوندا 6. nissan 7. جنرال موتورز 8. كيا 9. بي إم دبليو 10. مرسيدس"}, 
                     400: {q:"رتب أغنى 10 أشخاص في العالم (حسب فوربس)", a:"1. إيلون ماسك 2. جيف بيزوس 3. برنارد أرنو 4. مارك زوكربيرج 5. لاري إليسون 6. وارن بافيت 7. بيل غيتس 8. لاري بيج 9. ستيف بالمر 10. سيرجي برين"}, 
                     600: {q:"رتب أكثر 10 دول منتشر فيها الإسلام (عدداً)", a:"1. إندونيسيا 2. باكستان 3. الهند 4. بنجلاديش 5. نيجيريا 6. مصر 7. تركيا 8. إيران 9. الجزائر 10. السودان"},
                     800: {q:"رتب أقوى 10 جيوش في العالم (2024)", a:"1. أمريكا 2. روسيا 3. الصين 4. الهند 5. كوريا الجنوبية 6. بريطانيا 7. اليابان 8. تركيا 9. باكستان 10. إيطاليا"},
@@ -214,20 +235,27 @@
             document.getElementById('categories-screen').style.display = 'none';
             document.getElementById('game-interface').style.display = 'flex';
 
-            let html = `<h2 style="color:${isOrder ? '#0ea5e9' : 'var(--accent-color)'}">${cat} - ${pts} نقطة</h2>
-                        <p style="font-size:2.2rem; margin:30px 0; line-height:1.4;">${data.q}</p>`;
+            let html = `<h2 style="color:${isOrder ? '#0ea5e9' : 'var(--accent-color)'}">${cat}</h2>
+                        <p style="font-size:2rem; margin:20px 0; line-height:1.4;">${data.q}</p>`;
 
             if (isOrder) {
                 const answers = data.a.split(/\d+\./).filter(a => a.trim() !== "");
                 html += `<div class="order-grid">`;
                 answers.forEach((ans, i) => {
-                    html += `<div class="order-item" onclick="this.innerHTML='<span style=color:var(--order-color)>${i+1} - </span> ${ans.trim()}'; this.classList.add('revealed');">
-                             <span style='color:#64748b'>${i+1}</span> اضغط للكشف </div>`;
+                    let rank = i + 1;
+                    let pVal = rankPoints[rank];
+                    html += `
+                    <div class="order-item">
+                        <span class="order-rank-label">المركز ${rank} (${pVal}ن)</span>
+                        <div class="order-ans-text" id="order-ans-${rank}">${ans.trim()}</div>
+                        <div id="order-btns-${rank}" style="width:100%; display:flex; gap:5px;">
+                            <button class="order-give-btn" style="background:#f59e0b" onclick="giveOrderPts(${rank}, 1)">${document.getElementById('t1').value}</button>
+                            <button class="order-give-btn" style="background:#0ea5e9" onclick="giveOrderPts(${rank}, 2)">${document.getElementById('t2').value}</button>
+                            <button class="order-give-btn" style="background:#64748b" onclick="giveOrderPts(${rank}, 0)">كشف</button>
+                        </div>
+                    </div>`;
                 });
-                html += `</div><div id="win-area" style="margin-top:20px;">
-                         <button class="win-btn" onclick="addPts(1)">${document.getElementById('t1').value}</button>
-                         <button class="win-btn" onclick="addPts(2)">${document.getElementById('t2').value}</button>
-                         <button class="win-btn no-one-btn" onclick="addPts(0)">لا أحد</button></div>`;
+                html += `</div><button class="win-btn" onclick="finishQuestion()">إنهاء السؤال</button>`;
             } else {
                 html += `<div id="ans" style="display:none; text-align:center; color:#4ade80; font-weight:bold; font-size:1.8rem; background:rgba(0,0,0,0.5); padding:20px; border-radius:10px; margin-bottom:20px;">${data.a}</div>
                          <button class="win-btn" id="rev-btn" onclick="document.getElementById('ans').style.display='block'; this.style.display='none'; document.getElementById('win-area').style.display='block';">إظهار الإجابة</button>
@@ -239,12 +267,25 @@
             document.getElementById('q-content').innerHTML = html;
         }
 
-        function addPts(team) {
-            if(team === 1) { score1 += currentPoints; document.getElementById('score1').innerText = score1; }
-            else if(team === 2) { score2 += currentPoints; document.getElementById('score2').innerText = score2; }
+        function giveOrderPts(rank, team) {
+            let pVal = rankPoints[rank];
+            if(team === 1) { score1 += pVal; document.getElementById('score1').innerText = score1; }
+            if(team === 2) { score2 += pVal; document.getElementById('score2').innerText = score2; }
+            
+            document.getElementById(`order-ans-${rank}`).style.display = "block";
+            document.getElementById(`order-btns-${rank}`).style.display = "none";
+        }
+
+        function finishQuestion() {
             lastBox.classList.add('used');
             document.getElementById('game-interface').style.display = 'none';
             document.getElementById('categories-screen').style.display = 'grid';
+        }
+
+        function addPts(team) {
+            if(team === 1) { score1 += currentPoints; document.getElementById('score1').innerText = score1; }
+            else if(team === 2) { score2 += currentPoints; document.getElementById('score2').innerText = score2; }
+            finishQuestion();
         }
 
         function startTimer() {
@@ -257,3 +298,4 @@
     </script>
 </body>
 </html>
+ 
