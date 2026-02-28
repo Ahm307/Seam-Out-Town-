@@ -9,6 +9,7 @@
             --bg-color: #0f172a;
             --card-bg: #1e293b;
             --accent-color: #f59e0b;
+            --order-color: #0ea5e9; /* اللون السماوي للترتيب */
             --text-primary: #f8fafc;
         }
 
@@ -52,9 +53,11 @@
 
         #categories-screen { display: none; width: 95%; max-width: 1200px; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; padding: 40px 20px; }
         .cat-card { background: var(--card-bg); border-radius: 15px; border-bottom: 5px solid var(--accent-color); overflow: hidden; }
+        .cat-card.special { border-bottom: 5px solid var(--order-color); }
         .cat-main { display: flex; width: 100%; justify-content: space-between; align-items: center; }
         .points-col { display: flex; flex-direction: column; gap: 5px; width: 80px; padding: 10px; }
         .point-box { background: #334155; color: #fff; padding: 15px 5px; text-align: center; font-weight: bold; cursor: pointer; border-radius: 30px; margin: 5px; }
+        .point-box.order-pts { background: #075985; border: 1px solid var(--order-color); }
         .point-box.used { opacity: 0.2; cursor: default; }
         .cat-title { text-align: center; background: #f1f5f9; color: #000; padding: 10px; font-weight: bold; }
 
@@ -62,9 +65,7 @@
         .sidebar { width: 220px; background: rgba(30, 41, 59, 0.6); border: 2px solid var(--accent-color); padding: 15px; border-radius: 15px; text-align: center;}
         .score-display { font-size: 3.5rem; font-weight: bold; color: var(--accent-color); }
         
-        /* وسائل المساعدة */
         .help-btn { background: #334155; color: white; border: 1px solid var(--accent-color); padding: 10px; margin: 5px 0; width: 100%; border-radius: 8px; cursor: pointer; font-size: 0.9rem; transition: 0.3s; }
-        .help-btn:hover { background: var(--accent-color); color: #000; }
         .help-btn.used { opacity: 0.3; text-decoration: line-through; pointer-events: none; }
 
         .question-card { background: var(--card-bg); padding: 40px; border-radius: 20px; text-align: center; flex-grow: 1; margin: 0 20px; }
@@ -155,9 +156,7 @@
             }
         };
 
-        window.closeAlert = function() {
-            set(alertRef, "");
-        };
+        window.closeAlert = function() { set(alertRef, ""); };
     </script>
 
     <script>
@@ -171,7 +170,7 @@
             },
             "السيارات": {
                 icon: "🚗",
-                left: { 200: {q:"ما هي الدولة المصنعة لسيارات لمبورغيني؟", a:"إيطاليا"}, 400: {q:"ماذا تسمى القطعة التي تبرد محرك السيارة؟", a:"الرديتر (Radiator)"}, 600: {q:"ما هو اسم نظام الدفع الرباعي في سيارات أودي?؟", a:"كواترو (Quattro)"} },
+                left: { 200: {q:"ما هي الدولة المصنعة لسيارات لمبورغيني؟", a:"إيطاليا"}, 400: {q:"ماذا تسمى القطعة التي تبرد محرك السيارة؟", a:"الرديتر (Radiator)"}, 600: {q:"ما هو اسم نظام الدفع الرباعي في سيارات أودي؟", a:"كواترو (Quattro)"} },
                 right: { 200: {q:"ما هي الماركة التي يرمز لها بـ 4 حلقات متصلة؟", a:"أودي (Audi)"}, 400: {q:"ما هو اسم أول سيارة أطلقتها شركة تيسلا؟", a:"رودستر (Roadster)"}, 600: {q:"في أي مدينة يقع مقر شركة بي إم دبليو؟", a:"ميونخ، ألمانيا"} }
             },
             "الجغرافيا": {
@@ -184,17 +183,25 @@
                 left: { 200: {q:"من هو الملك الذي وحد المملكة العربية السعودية؟", a:"الملك عبدالعزيز"}, 400: {q:"من هو أول رئيس للولايات المتحدة الأمريكية؟", a:"جورج واشنطن"}, 600: {q:"من كان زعيم ليبيا لأكثر من 40 عاماً؟", a:"معمر القذافي"} },
                 right: { 200: {q:"من هي الملكة التي حكمت بريطانيا لأطول فترة؟", a:"إليزابيث الثانية"}, 400: {q:"من هو مؤسس دولة الإمارات؟", a:"الشيخ زايد بن سلطان"}, 600: {q:"من هو أول رئيس لمصر بعد الملكية؟", a:"محمد نجيب"} }
             },
-            "الدول العربية": {
-                icon: "🏙️",
-                left: { 200: {q:"ما هي عاصمة الصومال؟", a:"مقديشو"}, 400: {q:"ما هي أكبر دولة عربية من حيث المساحة؟", a:"الجزائر"}, 600: {q:"أي دولة عربية يمر بها خط الاستواء؟", a:"الصومال"} },
-                right: { 200: {q:"ما هو لقب مدينة القدس؟", a:"زهرة المداين"}, 400: {q:"في أي مدينة يقع جامع الزيتونة؟", a:"تونس العاصمة"}, 600: {q:"ما هي الدولة العربية التي تعتبر أكبر مصدر للنفط في العالم؟", a:"السعودية"} }
+            "الترتيب": {
+                icon: "🔢",
+                isSpecial: true,
+                left: { 
+                    200: {q:"رتب أكثر 10 ألعاب شهرة في العالم (من حيث اللاعبين النشطين)", a:"1. ببجي 2. ماين كرافت 3. روبلوكس 4. كاندي كراش 5. فورتنايت 6. لول 7. كود 8. امونج اس 9. فيفا 10. سيمز"}, 
+                    400: {q:"رتب أكثر 10 تطبيقات استخداماً في العالم", a:"1. فيسبوك 2. واتساب 3. انستقرام 4. ماسنجر 5. تيك توك 6. تلغرام 7. سناب شات 8. تويتر (X) 9. بنترست 10. كواي"}, 
+                    600: {q:"رتب أكثر 10 دول سياحية تم زيارتها (2024)", a:"1. فرنسا 2. إسبانيا 3. أمريكا 4. إيطاليا 5. تركيا 6. المكسيك 7. بريطانيا 8. ألمانيا 9. اليونان 10. النمسا"},
+                    800: {q:"رتب أكثر 10 لاعبين كرة قدم شهرة (تأثير وسوشيال ميديا)", a:"1. كريستيانو رونالدو 2. ميسي 3. نيمار 4. مبابي 5. صلاح 6. بنزيما 7. هالاند 8. ليفاندوفسكي 9. فينيسيوس 10. هاري كين"},
+                    1000: {q:"رتب أكثر 10 أندية تحقيقاً لدوري أبطال أوروبا", a:"1. ريال مدريد (15) 2. ميلان (7) 3. ليفربول (6) 4. بايرن ميونخ (6) 5. برشلونة (5) 6. أياكس (4) 7. مانشستر يونايتد (3) 8. انتر ميلان (3) 9. يوفنتوس (2) 10. بنفيكا (2)"}
+                },
+                right: { 
+                    200: {q:"رتب أكثر 10 شركات سيارات مبيعاً في العالم", a:"1. تويوتا 2. فولكس فاجن 3. فورد 4. هيونداي 5. هوندا 6. نيسان 7. جنرال موتورز 8. كيا 9. بي إم دبليو 10. مرسيدس"}, 
+                    400: {q:"رتب أغنى 10 أشخاص في العالم (حسب فوربس)", a:"1. إيلون ماسك 2. جيف بيزوس 3. برنارد أرنو 4. مارك زوكربيرج 5. لاري إليسون 6. وارن بافيت 7. بيل غيتس 8. لاري بيج 9. ستيف بالمر 10. سيرجي برين"}, 
+                    600: {q:"رتب أكثر 10 دول منتشر فيها الإسلام (عدداً)", a:"1. إندونيسيا 2. باكستان 3. الهند 4. بنجلاديش 5. نيجيريا 6. مصر 7. تركيا 8. إيران 9. الجزائر 10. السودان"},
+                    800: {q:"رتب أقوى 10 جيوش في العالم (2024)", a:"1. أمريكا 2. روسيا 3. الصين 4. الهند 5. كوريا الجنوبية 6. بريطانيا 7. اليابان 8. تركيا 9. باكستان 10. إيطاليا"},
+                    1000: {q:"رتب أعلى 10 قنوات يوتيوب من حيث المشتركين", a:"1. MrBeast 2. T-Series 3. Cocomelon 4. SET India 5. Kids Diana Show 6. Vlad and Niki 7. Like Nastya 8. PewDiePie 9. Zee Music 10. WWE"}
+                }
             }
         };
-
-        setTimeout(() => {
-            document.getElementById('intro-screen').style.display = 'none';
-            document.getElementById('setup-screen').style.display = 'flex';
-        }, 2000);
 
         function showCategories() {
             document.getElementById('side-name-1').innerText = document.getElementById('t1').value;
@@ -205,20 +212,20 @@
             const screen = document.getElementById('categories-screen');
             screen.style.display = 'grid'; screen.innerHTML = "";
             Object.keys(bank).forEach(cat => {
+                const isSpec = bank[cat].isSpecial;
+                let rowsLeft = "", rowsRight = "";
+                Object.keys(bank[cat].left).forEach(p => {
+                    rowsLeft += `<div class="point-box ${isSpec?'order-pts':''}" onclick="loadQ('${cat}','left',${p}, this)">${p}</div>`;
+                });
+                Object.keys(bank[cat].right).forEach(p => {
+                    rowsRight += `<div class="point-box ${isSpec?'order-pts':''}" onclick="loadQ('${cat}','right',${p}, this)">${p}</div>`;
+                });
                 screen.innerHTML += `
-                <div class="cat-card">
+                <div class="cat-card ${isSpec?'special':''}">
                     <div class="cat-main">
-                        <div class="points-col">
-                            <div class="point-box" onclick="loadQ('${cat}','left',200, this)">200</div>
-                            <div class="point-box" onclick="loadQ('${cat}','left',400, this)">400</div>
-                            <div class="point-box" onclick="loadQ('${cat}','left',600, this)">600</div>
-                        </div>
+                        <div class="points-col">${rowsLeft}</div>
                         <div style="font-size: 3rem;">${bank[cat].icon}</div>
-                        <div class="points-col">
-                            <div class="point-box" onclick="loadQ('${cat}','right',200, this)">200</div>
-                            <div class="point-box" onclick="loadQ('${cat}','right',400, this)">400</div>
-                            <div class="point-box" onclick="loadQ('${cat}','right',600, this)">600</div>
-                        </div>
+                        <div class="points-col">${rowsRight}</div>
                     </div>
                     <div class="cat-title">${cat}</div>
                 </div>`;
@@ -232,9 +239,12 @@
             document.getElementById('categories-screen').style.display = 'none';
             document.getElementById('game-interface').style.display = 'flex';
             document.getElementById('q-content').innerHTML = `
-                <h2 style="color:var(--accent-color)">${cat} - ${pts} نقطة</h2>
+                <h2 style="color:${bank[cat].isSpecial?'#0ea5e9': 'var(--accent-color)'}">${cat} - ${pts} نقطة</h2>
                 <p style="font-size:2.2rem; margin:30px 0; line-height:1.4;">${data.q}</p>
-                <p id="ans" style="display:none; color:#4ade80; font-weight:bold; font-size:1.8rem; background: rgba(0,0,0,0.3); padding:10px; border-radius:10px;">الإجابة: ${data.a}</p>
+                <div id="ans" style="display:none; text-align:right; color:#4ade80; font-weight:bold; font-size:1.3rem; background: rgba(0,0,0,0.5); padding:20px; border-radius:10px; margin-bottom:20px;">
+                    <span style="color:white; display:block; margin-bottom:10px;">الترتيب الصحيح:</span>
+                    ${data.a.replace(/\d+\./g, '<br>$&')}
+                </div>
                 <button class="win-btn" id="rev-btn" onclick="document.getElementById('ans').style.display='block'; this.style.display='none'; document.getElementById('win-area').style.display='block';">إظهار الإجابة</button>
                 <div id="win-area" style="display:none; margin-top:20px;">
                     <p style="font-weight:bold;">من الفائز بالنقاط؟</p>
@@ -247,7 +257,6 @@
         function addPts(team) {
             if(team === 1) { score1 += currentPoints; document.getElementById('score1').innerText = score1; }
             else if(team === 2) { score2 += currentPoints; document.getElementById('score2').innerText = score2; }
-            
             lastBox.classList.add('used');
             document.getElementById('game-interface').style.display = 'none';
             document.getElementById('categories-screen').style.display = 'grid';
