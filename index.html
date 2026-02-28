@@ -9,7 +9,7 @@
             --bg-color: #0f172a;
             --card-bg: #1e293b;
             --accent-color: #f59e0b;
-            --order-color: #0ea5e9; /* اللون السماوي للترتيب */
+            --order-color: #0ea5e9; 
             --text-primary: #f8fafc;
         }
 
@@ -20,7 +20,6 @@
             align-items: center; min-height: 100vh;
         }
 
-        /* --- نظام التنبيه الكلاسيكي (محلي الآن) --- */
         #admin-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.95); 
@@ -72,6 +71,12 @@
         .win-btn { background: var(--accent-color); color: #000; border: none; padding: 15px 30px; margin: 10px; border-radius: 10px; font-weight: bold; cursor: pointer; }
         .no-one-btn { background: #64748b; color: white; }
 
+        /* ستايل أزرار الترتيب */
+        .order-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 700px; margin: 20px auto; }
+        .order-item { background: #1e293b; border: 2px solid #334155; padding: 18px; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.3s; text-align: right; }
+        .order-item:hover { border-color: var(--order-color); }
+        .order-item.revealed { border-color: var(--order-color); background: #0f172a; }
+
         #setup-screen { display: none; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; }
         input { width: 300px; padding: 15px; background: #21262d; border: 1px solid var(--accent-color); color: #fff; text-align: center; margin-bottom: 15px; border-radius: 8px;}
     </style>
@@ -85,7 +90,6 @@
     </div>
 
     <div id="admin-trigger" onclick="adminAuth()"></div>
-
     <div id="intro-screen"><div class="shiny-text">سيم جيم لايف زون</div></div>
     <div id="top-timer-bar">00:00</div>
 
@@ -121,11 +125,10 @@
     </div>
 
     <script>
-        // --- وظائف النظام الإداري (بدون فايربيس) ---
         window.adminAuth = function() {
             let p = prompt("هوية المطور:");
             if(p === "123") {
-                let m = prompt("اكتب الرسالة التي ستظهر للتنبيه:");
+                let m = prompt("اكتب الرسالة:");
                 if(m) {
                     document.getElementById('alert-text').innerText = m;
                     document.getElementById('admin-overlay').style.display = "flex";
@@ -133,11 +136,8 @@
             }
         };
 
-        window.closeAlert = function() {
-            document.getElementById('admin-overlay').style.display = "none";
-        };
+        window.closeAlert = function() { document.getElementById('admin-overlay').style.display = "none"; };
 
-        // --- منطق اللعبة ---
         let score1 = 0, score2 = 0, currentPoints = 0, lastBox = null;
 
         const bank = {
@@ -181,7 +181,6 @@
             }
         };
 
-        // إخفاء شاشة الإنترو تلقائياً
         setTimeout(() => {
             document.getElementById('intro-screen').style.display = 'none';
             document.getElementById('setup-screen').style.display = 'flex';
@@ -198,21 +197,11 @@
             Object.keys(bank).forEach(cat => {
                 const isSpec = bank[cat].isSpecial;
                 let rowsLeft = "", rowsRight = "";
-                Object.keys(bank[cat].left).forEach(p => {
-                    rowsLeft += `<div class="point-box ${isSpec?'order-pts':''}" onclick="loadQ('${cat}','left',${p}, this)">${p}</div>`;
-                });
-                Object.keys(bank[cat].right).forEach(p => {
-                    rowsRight += `<div class="point-box ${isSpec?'order-pts':''}" onclick="loadQ('${cat}','right',${p}, this)">${p}</div>`;
-                });
-                screen.innerHTML += `
-                <div class="cat-card ${isSpec?'special':''}">
-                    <div class="cat-main">
-                        <div class="points-col">${rowsLeft}</div>
-                        <div style="font-size: 3rem;">${bank[cat].icon}</div>
-                        <div class="points-col">${rowsRight}</div>
-                    </div>
-                    <div class="cat-title">${cat}</div>
-                </div>`;
+                Object.keys(bank[cat].left).forEach(p => { rowsLeft += `<div class="point-box ${isSpec?'order-pts':''}" onclick="loadQ('${cat}','left',${p}, this)">${p}</div>`; });
+                Object.keys(bank[cat].right).forEach(p => { rowsRight += `<div class="point-box ${isSpec?'order-pts':''}" onclick="loadQ('${cat}','right',${p}, this)">${p}</div>`; });
+                screen.innerHTML += `<div class="cat-card ${isSpec?'special':''}">
+                    <div class="cat-main"> <div class="points-col">${rowsLeft}</div> <div style="font-size: 3rem;">${bank[cat].icon}</div> <div class="points-col">${rowsRight}</div> </div>
+                    <div class="cat-title">${cat}</div> </div>`;
             });
         }
 
@@ -220,22 +209,34 @@
             if(el.classList.contains('used')) return;
             currentPoints = pts; lastBox = el;
             const data = bank[cat][side][pts];
+            const isOrder = bank[cat].isSpecial;
+
             document.getElementById('categories-screen').style.display = 'none';
             document.getElementById('game-interface').style.display = 'flex';
-            document.getElementById('q-content').innerHTML = `
-                <h2 style="color:${bank[cat].isSpecial?'#0ea5e9': 'var(--accent-color)'}">${cat} - ${pts} نقطة</h2>
-                <p style="font-size:2.2rem; margin:30px 0; line-height:1.4;">${data.q}</p>
-                <div id="ans" style="display:none; text-align:right; color:#4ade80; font-weight:bold; font-size:1.3rem; background: rgba(0,0,0,0.5); padding:20px; border-radius:10px; margin-bottom:20px;">
-                    <span style="color:white; display:block; margin-bottom:10px;">الترتيب الصحيح:</span>
-                    ${data.a.replace(/\d+\./g, '<br>$&')}
-                </div>
-                <button class="win-btn" id="rev-btn" onclick="document.getElementById('ans').style.display='block'; this.style.display='none'; document.getElementById('win-area').style.display='block';">إظهار الإجابة</button>
-                <div id="win-area" style="display:none; margin-top:20px;">
-                    <p style="font-weight:bold;">من الفائز بالنقاط؟</p>
-                    <button class="win-btn" onclick="addPts(1)">${document.getElementById('t1').value}</button>
-                    <button class="win-btn" onclick="addPts(2)">${document.getElementById('t2').value}</button>
-                    <button class="win-btn no-one-btn" onclick="addPts(0)">لا أحد</button>
-                </div>`;
+
+            let html = `<h2 style="color:${isOrder ? '#0ea5e9' : 'var(--accent-color)'}">${cat} - ${pts} نقطة</h2>
+                        <p style="font-size:2.2rem; margin:30px 0; line-height:1.4;">${data.q}</p>`;
+
+            if (isOrder) {
+                const answers = data.a.split(/\d+\./).filter(a => a.trim() !== "");
+                html += `<div class="order-grid">`;
+                answers.forEach((ans, i) => {
+                    html += `<div class="order-item" onclick="this.innerHTML='<span style=color:var(--order-color)>${i+1} - </span> ${ans.trim()}'; this.classList.add('revealed');">
+                             <span style='color:#64748b'>${i+1}</span> اضغط للكشف </div>`;
+                });
+                html += `</div><div id="win-area" style="margin-top:20px;">
+                         <button class="win-btn" onclick="addPts(1)">${document.getElementById('t1').value}</button>
+                         <button class="win-btn" onclick="addPts(2)">${document.getElementById('t2').value}</button>
+                         <button class="win-btn no-one-btn" onclick="addPts(0)">لا أحد</button></div>`;
+            } else {
+                html += `<div id="ans" style="display:none; text-align:center; color:#4ade80; font-weight:bold; font-size:1.8rem; background:rgba(0,0,0,0.5); padding:20px; border-radius:10px; margin-bottom:20px;">${data.a}</div>
+                         <button class="win-btn" id="rev-btn" onclick="document.getElementById('ans').style.display='block'; this.style.display='none'; document.getElementById('win-area').style.display='block';">إظهار الإجابة</button>
+                         <div id="win-area" style="display:none; margin-top:20px;">
+                         <button class="win-btn" onclick="addPts(1)">${document.getElementById('t1').value}</button>
+                         <button class="win-btn" onclick="addPts(2)">${document.getElementById('t2').value}</button>
+                         <button class="win-btn no-one-btn" onclick="addPts(0)">لا أحد</button></div>`;
+            }
+            document.getElementById('q-content').innerHTML = html;
         }
 
         function addPts(team) {
