@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سيم جيم - نسخة رمضان</title>
+    <title>سيم جيم - نسخة LN المطورة</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --accent-color: #f59e0b;
+            --bg-color: #000000;
+            --card-bg: #0f172a;
+            --accent-blue: #007bff;
             --text-primary: #f8fafc;
-            --disabled-color: #475569;
         }
 
         body {
@@ -20,287 +19,210 @@
             align-items: center; min-height: 100vh;
         }
 
-        /* --- التنبيه الإداري (تغطية كاملة + وميض أحمر وأسود) --- */
+        /* --- نظام التنبيه الإداري الثابت --- */
         #admin-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.95); 
+            background: rgba(0, 0, 0, 0.98); 
             display: none; flex-direction: column; justify-content: center;
             align-items: center; z-index: 20000; text-align: center;
-            border: 0px solid red;
-            animation: border-flash 0.3s infinite alternate;
-        }
-        
-        @keyframes border-flash {
-            from { box-shadow: inset 0 0 50px red; }
-            to { box-shadow: inset 0 0 150px #000; }
+            border: 5px solid var(--accent-blue);
+            box-shadow: inset 0 0 100px rgba(0, 123, 255, 0.5);
         }
 
-        .flashing-title {
-            color: #ff0000; font-size: 2.5rem; margin-bottom: 20px;
-            animation: blink 0.2s infinite alternate; font-weight: 900;
-            text-shadow: 0 0 15px red;
+        .alert-title {
+            color: var(--accent-blue); font-size: 3rem; margin-bottom: 20px;
+            font-weight: 900; text-shadow: 0 0 20px var(--accent-blue);
         }
-        .flashing-msg {
-            color: #fff; font-size: 4rem; font-weight: 900;
-            padding: 0 20px; text-shadow: 0 0 30px #fff;
-            animation: shake 0.1s infinite;
+        .alert-msg {
+            color: #fff; font-size: 2.5rem; font-weight: bold;
+            padding: 0 30px; line-height: 1.5;
         }
 
-        @keyframes blink {
-            from { opacity: 1; } to { opacity: 0.1; }
-        }
-        @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            40% { transform: translate(3px, 2px) rotate(-1deg); }
-            60% { transform: translate(-1px, -1px) rotate(1deg); }
-            80% { transform: translate(-3px, 1px) rotate(0deg); }
-            100% { transform: translate(1px, -2px) rotate(-1deg); }
-        }
-
-        #admin-trigger {
-            position: fixed; bottom: 0; left: 0; width: 50px; height: 50px;
-            background: transparent; cursor: pointer; z-index: 1000;
-        }
-
-        /* شاشة الدخول */
         #intro-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-color); display: flex; justify-content: center;
-            align-items: center; z-index: 9999; transition: opacity 1s;
+            background: #000; display: flex; justify-content: center;
+            align-items: center; z-index: 9999;
         }
         .shiny-text {
-            font-size: 3.5rem; font-weight: bold; text-align: center;
-            background: linear-gradient(90deg, transparent, #fff, transparent);
-            background-size: 80%; background-repeat: no-repeat;
-            -webkit-background-clip: text; -webkit-text-fill-color: var(--accent-color);
-            animation: shine 2.5s infinite;
+            font-size: 4rem; font-weight: 900; color: var(--accent-blue);
+            text-shadow: 0 0 30px var(--accent-blue);
         }
-        @keyframes shine { 0% { background-position: -500%; } 100% { background-position: 500%; } }
 
         #top-timer-bar {
-            display: none; background-color: var(--accent-color);
-            color: #432b05; padding: 8px 30px; border-radius: 50px;
-            font-size: 1.6rem; font-weight: bold; margin-top: 20px;
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); z-index: 100;
+            display: none; background-color: var(--accent-blue);
+            color: #fff; padding: 10px 40px; border-radius: 50px;
+            font-size: 1.8rem; font-weight: bold; margin-top: 20px;
         }
 
         #categories-screen {
             display: none; width: 95%; max-width: 1200px;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px; padding: 40px 20px;
         }
         .cat-card {
-            background: var(--card-bg); border-radius: 15px;
-            display: flex; flex-direction: column; align-items: center;
-            border-bottom: 5px solid var(--accent-color); overflow: hidden;
+            background: var(--card-bg); border-radius: 20px;
+            border: 2px solid #1e293b; transition: 0.3s;
         }
+        .cat-card:hover { border-color: var(--accent-blue); transform: translateY(-5px); }
         .cat-main { display: flex; width: 100%; justify-content: space-between; align-items: center; }
-        .points-col { display: flex; flex-direction: column; gap: 5px; width: 80px; padding: 10px; }
+        .points-col { display: flex; flex-direction: column; gap: 8px; padding: 15px; }
         .point-box {
-            background: #334155; color: #fff; padding: 15px 5px;
-            text-align: center; font-weight: bold; cursor: pointer;
-            border-radius: 30px; margin: 5px; transition: 0.3s;
+            background: #1e293b; color: #fff; width: 60px; height: 60px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; cursor: pointer; border-radius: 12px; transition: 0.3s;
         }
-        .point-box:hover:not(.used) { background: var(--accent-color); color: #000; }
-        .point-box.used { opacity: 0.2; cursor: default; }
+        .point-box:hover:not(.used) { background: var(--accent-blue); }
+        .point-box.used { opacity: 0.1; cursor: not-allowed; }
         .cat-title {
-            flex-grow: 1; text-align: center; background: #f1f5f9;
-            color: #000; padding: 10px; font-weight: bold; width: 100%;
+            text-align: center; background: var(--accent-blue);
+            color: #fff; padding: 10px; font-weight: bold; border-radius: 0 0 18px 18px;
         }
+
+        .options-container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px;
+        }
+        .option-btn {
+            background: #1e293b; border: 2px solid #334155; color: white;
+            padding: 20px; border-radius: 15px; font-size: 1.2rem; cursor: pointer;
+            transition: 0.3s; text-align: right;
+        }
+        .option-btn:hover { border-color: var(--accent-blue); background: #0f172a; }
 
         #game-interface { display: none; width: 98%; justify-content: space-between; margin-top: 20px; }
         .sidebar {
-            width: 220px; background: rgba(30, 41, 59, 0.6);
-            border: 2px solid var(--accent-color); padding: 15px;
-            text-align: center; border-radius: 15px;
+            width: 250px; background: #0f172a; border: 2px solid var(--accent-blue);
+            padding: 20px; border-radius: 20px;
         }
-        .score-display { font-size: 3.5rem; font-weight: bold; color: var(--accent-color); }
+        .score-display { font-size: 4rem; font-weight: 900; color: var(--accent-blue); }
         
         .help-item {
-            display: flex; align-items: center; justify-content: center; gap: 10px; 
-            margin-top: 15px; cursor: pointer; font-size: 1rem; padding: 10px;
-            background: rgba(255,255,255,0.05); border-radius: 8px;
-            transition: 0.3s; border: 1px solid transparent;
+            background: rgba(255,255,255,0.05); padding: 15px; margin-top: 10px;
+            border-radius: 12px; cursor: pointer; transition: 0.3s;
         }
-        .help-item.used-help {
-            background: var(--accent-color) !important;
-            color: #000 !important;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
+        .help-item.used-help { background: #334155; text-decoration: line-through; opacity: 0.5; }
 
-        .question-area { flex-grow: 1; margin: 0 20px; text-align: center; }
-        .question-card { background: var(--card-bg); padding: 40px; border-radius: 20px; border: 1px solid #334155; }
-        
-        .winner-selection { display: none; margin-top: 30px; border-top: 1px solid #444; padding-top: 20px; }
+        .question-area { flex-grow: 1; margin: 0 30px; }
+        .question-card { background: #0f172a; padding: 50px; border-radius: 30px; border: 1px solid #1e293b; }
+
         .win-btn {
-            background: var(--accent-color); color: #000; border: none;
-            padding: 15px 30px; margin: 10px; border-radius: 10px;
-            font-weight: bold; cursor: pointer; font-size: 1.1rem;
+            background: var(--accent-blue); color: white; border: none;
+            padding: 15px 40px; margin: 10px; border-radius: 12px; font-weight: bold; cursor: pointer;
         }
 
-        #setup-screen { display: none; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; width: 100%; }
-        .container { width: 90%; max-width: 600px; text-align: center; }
-        .team-box { background: var(--card-bg); border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
-        .team-label { background: var(--accent-color); color: #000; padding: 10px; font-weight: bold; }
-        input { width: 100%; padding: 15px; background: #21262d; border: none; color: #fff; text-align: center; font-size: 1.1rem; box-sizing: border-box;}
-        .start-btn { background: var(--accent-color); padding: 15px 50px; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; }
+        #setup-screen { display: none; flex-direction: column; align-items: center; justify-content: center; height: 80vh; }
+        input { width: 300px; padding: 15px; margin: 10px; background: #1e293b; border: 1px solid var(--accent-blue); color: #fff; border-radius: 10px; text-align: center; }
     </style>
 </head>
 <body>
 
     <div id="admin-overlay">
-        <div class="flashing-title">📢 الـمـطـور جـنـازة 📢</div>
-        <div class="flashing-msg" id="alert-text">إخلاء الموقع فوراً</div>
+        <div class="alert-title">S Y S T E M - A L E R T</div>
+        <div class="alert-msg" id="alert-text">رسالة إدارية هامة</div>
+        <button class="win-btn" style="margin-top:40px" onclick="closeAlert()">إغلاق</button>
     </div>
 
-    <div id="admin-trigger" onclick="openAdminPanel()"></div>
-
-    <div id="intro-screen"><div class="shiny-text">سيم جيم لايف زون</div></div>
+    <div id="intro-screen"><div class="shiny-text">LN EDITION</div></div>
     <div id="top-timer-bar">00:00</div>
 
     <div id="setup-screen">
-        <h1>🌙 سيم جيم لايف زون</h1>
-        <div class="container">
-            <div class="team-box">
-                <div class="team-label">الفريق الأول</div>
-                <input type="text" id="t1" value="دربحه">
-            </div>
-            <div class="team-box">
-                <div class="team-label">الفريق الثاني</div>
-                <input type="text" id="t2" placeholder="أدخل اسم الفريق الثاني">
-            </div>
-            <button class="start-btn" onclick="showCategories()">ابدأ اللعب</button>
-        </div>
+        <h1 style="color:var(--accent-blue)">سيم جيم - نسخة الأزرق والأسود</h1>
+        <input type="text" id="t1" value="دربحه">
+        <input type="text" id="t2" placeholder="اسم الفريق الثاني">
+        <button class="win-btn" onclick="showCategories()">دخول المسابقة</button>
     </div>
 
     <div id="categories-screen"></div>
 
     <div id="game-interface">
         <div class="sidebar">
-            <div id="side-name-1" style="color:var(--accent-color); font-weight:bold;"></div>
+            <h2 id="side-name-1"></h2>
             <div class="score-display" id="score1">0</div>
-            <div style="border-top:1px solid #444; margin-top:10px; padding-top:10px;">المساعدات</div>
-            <div class="help-item" onclick="useHelp(this)">📞 اتصال بصديق</div>
-            <div class="help-item" onclick="useHelp(this)">✌️ اختيار إجابتين</div>
-            <div class="help-item" onclick="useHelp(this)">🕳️ الحفرة</div>
+            <div class="help-item" onclick="this.classList.add('used-help')">📞 اتصال</div>
+            <div class="help-item" onclick="this.classList.add('used-help')">✌️ حذف إجابة</div>
         </div>
 
         <div class="question-area" id="q-content"></div>
 
         <div class="sidebar">
-            <div id="side-name-2" style="color:var(--accent-color); font-weight:bold;"></div>
+            <h2 id="side-name-2"></h2>
             <div class="score-display" id="score2">0</div>
-            <div style="border-top:1px solid #444; margin-top:10px; padding-top:10px;">المساعدات</div>
-            <div class="help-item" onclick="useHelp(this)">📞 اتصال بصديق</div>
-            <div class="help-item" onclick="useHelp(this)">✌️ اختيار إجابتين</div>
-            <div class="help-item" onclick="useHelp(this)">🕳️ الحفرة</div>
+            <div class="help-item" onclick="this.classList.add('used-help')">📞 اتصال</div>
+            <div class="help-item" onclick="this.classList.add('used-help')">✌️ حذف إجابة</div>
         </div>
     </div>
 
-    <script>
-        let score1 = 0; let score2 = 0; let currentPoints = 0;
-        let lastClickedBox = null;
-        
-        // إنشاء صوت الإنذار برمجياً (تجنباً لروابط قد تنكسر)
-        const sirenContext = new (window.AudioContext || window.webkitAudioContext)();
-        let sirenInterval;
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        function playSiren() {
-            if(sirenContext.state === 'suspended') sirenContext.resume();
-            let osc = sirenContext.createOscillator();
-            let gain = sirenContext.createGain();
-            osc.connect(gain);
-            gain.connect(sirenContext.destination);
-            
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(300, sirenContext.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(800, sirenContext.currentTime + 1);
-            
-            gain.gain.setValueAtTime(0.1, sirenContext.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, sirenContext.currentTime + 1);
-            
-            osc.start();
-            osc.stop(sirenContext.currentTime + 1);
-        }
+        const firebaseConfig = {
+            apiKey: "AIzaSyBZYjgSDNbHds0PPduqw-hO9Xz3cb21uMI",
+            authDomain: "live-zone-management.firebaseapp.com",
+            databaseURL: "https://live-zone-management-default-rtdb.firebaseio.com",
+            projectId: "live-zone-management",
+            storageBucket: "live-zone-management.firebasestorage.app",
+            messagingSenderId: "548749835258",
+            appId: "1:548749835258:web:80560271840af10ce90243"
+        };
 
-        function openAdminPanel() {
-            let pass = prompt("تحقق الهوية (المطور جنازة):");
-            if(pass === "101010") {
-                let msg = prompt("أدخل رسالة الإنذار:");
-                if(msg) sendGlobalAlert(msg);
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // مراقبة التنبيه من Firebase
+        const alertRef = ref(db, 'system_alert');
+        onValue(alertRef, (snapshot) => {
+            const msg = snapshot.val();
+            if(msg) {
+                document.getElementById('alert-text').innerText = msg;
+                document.getElementById('admin-overlay').style.display = 'flex';
             }
-        }
+        });
+    </script>
 
-        function sendGlobalAlert(text) {
-            const overlay = document.getElementById('admin-overlay');
-            const alertText = document.getElementById('alert-text');
-            alertText.innerText = text;
-            overlay.style.display = "flex";
+    <script>
+        let score1 = 0, score2 = 0, currentPoints = 0, lastBox = null;
 
-            // بدء صوت الإنذار المتكرر
-            sirenInterval = setInterval(playSiren, 1000);
-
-            setTimeout(() => {
-                overlay.style.display = "none";
-                clearInterval(sirenInterval);
-            }, 8000); // يستمر لـ 8 ثواني
-        }
-
-        // --- باقي وظائف اللعبة الأصلية ---
         const bank = {
-            "أسئلة دينية": {
-                icon: "🕌",
-                left: { 200: {q:"ما هي أطول سورة في القرآن؟", a:"سورة البقرة"}, 400: {q:"كم عدد الخلفاء الراشدين؟", a:"4"}, 600: {q:"من هو الملقب بذي النورين؟", a:"عثمان بن عفان"} },
-                right: { 200: {q:"ما هي السورة التي تسمى عروس القرآن؟", a:"سورة الرحمن"}, 400: {q:"من هو أول مؤذن في الإسلام؟", a:"بلال بن رباح"}, 600: {q:"كم عدد أجزاء القرآن الكريم؟", a:"30 جزء"} }
+            "عالم التكنولوجيا": {
+                icon: "💻",
+                left: { 
+                    200: {q: "ما هي لغة البرمجة الأكثر استخداماً في تطوير الويب؟", options: ["Python", "JavaScript", "C++"], a: "JavaScript"},
+                    400: {q: "ماذا يرمز اختصار CPU؟", options: ["معالج مركزي", "ذاكرة وصول", "كرت شاشة"], a: "معالج مركزي"},
+                    600: {q: "في أي عام تم إطلاق أول هاتف آيفون؟", options: ["2005", "2007", "2009"], a: "2007"}
+                },
+                right: {
+                    200: {q: "من هو مؤسس شركة مايكروسوفت؟", options: ["ستيف جوبز", "بيل غيتس", "إيلون ماسك"], a: "بيل غيتس"},
+                    400: {q: "أي شركة طورت نظام الأندرويد؟", options: ["أبل", "جوجل", "سامسونج"], a: "جوجل"},
+                    600: {q: "ما هي أكبر سعة تخزينية مما يلي؟", options: ["1 تيرابايت", "1024 جيجابايت", "كلاهما متساويان"], a: "كلاهما متساويان"}
+                }
             },
-            "السيارات": {
-                icon: "🚗",
-                left: { 200: {q:"ما هي جنسية شركة تويوتا؟", a:"يابانية"}, 400: {q:"ما هي الشركة التي استحوذت على فولفو؟", a:"جيلي الصينية"}, 600: {q:"ما هو شعار شركة مرسيدس؟", a:"النجمة الثلاثية"} },
-                right: { 200: {q:"ما هي أسرع سيارة في العالم؟", a:"بوغاتي"}, 400: {q:"شعار الحصان يرمز لأي شركة؟", a:"فيراري"}, 600: {q:"ما هي بلد منشأ شركة هيونداي؟", a:"كوريا الجنوبية"} }
-            },
-            "الجغرافيا": {
-                icon: "🌍",
-                left: { 200: {q:"ما هي أكبر قارة في العالم من حيث المساحة؟", a:"قارة آسيا"}, 400: {q:"ما هو أطول نهر في العالم؟", a:"نهر النيل"}, 600: {q:"في أي قارة تقع غابة الأمازون؟", a:"أمريكا الجنوبية"} },
-                right: { 200: {q:"ما هي أصغر دولة في العالم؟", a:"الفاتيكان"}, 400: {q:"ما هو أعلى جبل في العالم؟", a:"إيفرست"}, 600: {q:"ما هي الدولة التي تسمى بلاد الشمس المشرقة؟", a:"اليابان"} }
-            },
-            "حكام الدول": {
-                icon: "👑",
-                left: { 200: {q:"من هو ملك المملكة العربية السعودية الحالي؟", a:"الملك سلمان بن عبدالعزيز"}, 400: {q:"من هو حاكم سلطنة عمان؟", a:"السلطان هيثم بن طارق"}, 600: {q:"من هو مؤسس الدولة السعودية الأولى؟", a:"محمد بن سعود"} },
-                right: { 200: {q:"من هو أمير دولة قطر الحالي؟", a:"الشيخ تميم بن حمد"}, 400: {q:"من هو ملك الأردن؟", a:"الملك عبدالله الثاني"}, 600: {q:"من هو رئيس دولة الإمارات؟", a:"الشيخ محمد بن زايد"} }
-            },
-            "الدول العربية": {
-                icon: "🏙️",
-                left: { 200: {q:"في أي عام نشأت المملكة الأردنية الهاشمية (الاستقلال)؟", a:"1946م"}, 400: {q:"ما هي عاصمة دولة الكويت؟", a:"مدينة الكويت"}, 600: {q:"ما هي الدولة العربية الوحيدة التي تطل على المحيط الأطلسي والمتوسط؟", a:"المغرب"} },
-                right: { 200: {q:"ما هي مساحة المملكة العربية السعودية تقريباً؟", a:"2 مليون كم²"}, 400: {q:"متى تم تأسيس دولة الإمارات العربية المتحدة؟", a:"1971م"}, 600: {q:"ما هي الدولة العربية التي تسمى ببلاد المليون شهيد؟", a:"الجزائر"} }
+            "كرة القدم": {
+                icon: "⚽",
+                left: {
+                    200: {q: "كم عدد لاعبي فريق كرة القدم داخل الملعب؟", options: ["10", "11", "12"], a: "11"},
+                    400: {q: "من هو اللاعب الملقب بـ (البرغوث)؟", options: ["رونالدو", "ميسي", "نيمار"], a: "ميسي"},
+                    600: {q: "أي دولة فازت بكأس العالم 2022؟", options: ["فرنسا", "الأرجنتين", "المغرب"], a: "الأرجنتين"}
+                },
+                right: {
+                    200: {q: "كم مدة الشوط الواحد في كرة القدم؟", options: ["40 دقيقة", "45 دقيقة", "50 دقيقة"], a: "45 دقيقة"},
+                    400: {q: "من هو النادي الملقب بـ (المرنغي)؟", options: ["برشلونة", "ريال مدريد", "ليفربول"], a: "ريال مدريد"},
+                    600: {q: "أين أقيم أول مونديال في التاريخ عام 1930؟", options: ["البرازيل", "الأوروغواي", "إيطاليا"], a: "الأوروغواي"}
+                }
             }
         };
 
-        function startTimer() {
-            let s = 0; setInterval(() => {
-                s++; let mins = Math.floor(s/60); let secs = s%60;
-                document.getElementById('top-timer-bar').innerText = (mins<10?"0"+mins:mins)+":"+(secs<10?"0"+secs:secs);
-            }, 1000);
-        }
+        function closeAlert() { document.getElementById('admin-overlay').style.display = 'none'; }
 
         setTimeout(() => {
-            document.getElementById('intro-screen').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('intro-screen').style.display = 'none';
-                document.getElementById('setup-screen').style.display = 'flex';
-                document.getElementById('top-timer-bar').style.display = 'block';
-                startTimer();
-            }, 1000);
+            document.getElementById('intro-screen').style.display = 'none';
+            document.getElementById('setup-screen').style.display = 'flex';
         }, 2000);
 
         function showCategories() {
-            const n1 = document.getElementById('t1').value;
-            const n2 = document.getElementById('t2').value;
-            if(!n2) return alert("ادخل اسم الفريق الثاني");
-            document.getElementById('side-name-1').innerText = n1;
-            document.getElementById('side-name-2').innerText = n2;
+            document.getElementById('side-name-1').innerText = document.getElementById('t1').value;
+            document.getElementById('side-name-2').innerText = document.getElementById('t2').value;
             document.getElementById('setup-screen').style.display = 'none';
+            document.getElementById('top-timer-bar').style.display = 'block';
             const screen = document.getElementById('categories-screen');
             screen.style.display = 'grid';
             screen.innerHTML = "";
@@ -313,7 +235,7 @@
                                 <div class="point-box" onclick="loadQ('${cat}','left',400, this)">400</div>
                                 <div class="point-box" onclick="loadQ('${cat}','left',600, this)">600</div>
                             </div>
-                            <div style="font-size: 3.5rem;">${bank[cat].icon}</div>
+                            <div style="font-size: 3rem;">${bank[cat].icon}</div>
                             <div class="points-col">
                                 <div class="point-box" onclick="loadQ('${cat}','right',200, this)">200</div>
                                 <div class="point-box" onclick="loadQ('${cat}','right',400, this)">400</div>
@@ -325,47 +247,49 @@
             });
         }
 
-        function loadQ(cat, side, pts, element) {
-            if(element.classList.contains('used')) return;
-            currentPoints = pts;
-            lastClickedBox = element;
-            const data = bank[cat][side][pts];
+        function loadQ(cat, side, pts, el) {
+            if(el.classList.contains('used')) return;
+            currentPoints = pts; lastBox = el;
+            const qData = bank[cat][side][pts];
             document.getElementById('categories-screen').style.display = 'none';
             document.getElementById('game-interface').style.display = 'flex';
+            
+            let optionsHtml = qData.options.map(opt => `<button class="option-btn" onclick="checkAns(this, '${qData.a}')">${opt}</button>`).join('');
+            
             document.getElementById('q-content').innerHTML = `
                 <div class="question-card">
-                    <h2 style="color:var(--accent-color)">${cat} - ${pts} نقطة</h2>
-                    <p style="font-size:2rem; margin:30px 0;">${data.q}</p>
-                    <p id="ans" style="display:none; color:#4ade80; font-weight:bold; font-size:1.6rem;">الإجابة: ${data.a}</p>
-                    <button class="start-btn" id="rev-btn" onclick="reveal()">إظهار الإجابة</button>
-                    <div class="winner-selection" id="win-area">
-                        <p>من الفائز بالنقاط؟</p>
-                        <button class="win-btn" onclick="addPts(1)">${document.getElementById('t1').value}</button>
-                        <button class="win-btn" onclick="addPts(2)">${document.getElementById('t2').value}</button>
-                        <button class="win-btn" style="background:#444; color:#fff;" onclick="addPts(0)">لا أحد</button>
+                    <h2 style="color:var(--accent-blue)">${cat} - ${pts} نقطة</h2>
+                    <p style="font-size:2.2rem; margin:20px 0;">${qData.q}</p>
+                    <div class="options-container">${optionsHtml}</div>
+                    <div id="win-area" style="display:none; margin-top:30px;">
+                        <button class="win-btn" onclick="addPts(1)">فوز ${document.getElementById('t1').value}</button>
+                        <button class="win-btn" onclick="addPts(2)">فوز ${document.getElementById('t2').value}</button>
                     </div>
                 </div>`;
         }
 
-        function reveal() {
-            document.getElementById('ans').style.display = 'block';
-            document.getElementById('rev-btn').style.display = 'none';
-            document.getElementById('win-area').style.display = 'block';
+        function checkAns(btn, correct) {
+            if(btn.innerText === correct) {
+                btn.style.background = "#28a745";
+                document.getElementById('win-area').style.display = "block";
+            } else {
+                btn.style.background = "#dc3545";
+                alert("إجابة خاطئة!");
+            }
         }
 
         function addPts(team) {
             if(team === 1) { score1 += currentPoints; document.getElementById('score1').innerText = score1; }
-            if(team === 2) { score2 += currentPoints; document.getElementById('score2').innerText = score2; }
-            if(lastClickedBox) lastClickedBox.classList.add('used');
+            else { score2 += currentPoints; document.getElementById('score2').innerText = score2; }
+            lastBox.classList.add('used');
             document.getElementById('game-interface').style.display = 'none';
             document.getElementById('categories-screen').style.display = 'grid';
         }
 
-        function useHelp(element) {
-            if(!element.classList.contains('used-help')) {
-                element.classList.add('used-help');
-            }
-        }
+        let s = 0; setInterval(() => {
+            s++; let m = Math.floor(s/60), sec = s%60;
+            document.getElementById('top-timer-bar').innerText = `${m<10?'0'+m:m}:${sec<10?'0'+sec:sec}`;
+        }, 1000);
     </script>
 </body>
 </html>
