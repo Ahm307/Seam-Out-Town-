@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سيم جيم لايف زون</title>
+    <title>سيم جيم لايف زون - نظام النقاط المطور</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -28,10 +28,7 @@
             animation: border-flash 0.3s infinite alternate;
         }
         
-        @keyframes border-flash {
-            from { box-shadow: inset 0 0 50px red; }
-            to { box-shadow: inset 0 0 150px #000; }
-        }
+        @keyframes border-flash { from { box-shadow: inset 0 0 50px red; } to { box-shadow: inset 0 0 150px #000; } }
 
         .flashing-title { color: #ff0000; font-size: 2.5rem; margin-bottom: 20px; animation: blink 0.2s infinite alternate; font-weight: 900; }
         .flashing-msg { color: #fff; font-size: 4rem; font-weight: 900; animation: shake 0.1s infinite; }
@@ -44,7 +41,6 @@
         }
 
         #admin-trigger { position: fixed; bottom: 0; left: 0; width: 50px; height: 50px; background: transparent; cursor: pointer; z-index: 1000; }
-
         #intro-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); display: flex; justify-content: center; align-items: center; z-index: 9999; }
         .shiny-text { font-size: 3.5rem; font-weight: bold; color: var(--accent-color); }
 
@@ -68,14 +64,14 @@
         .help-btn.used { opacity: 0.3; text-decoration: line-through; pointer-events: none; }
 
         .question-card { background: var(--card-bg); padding: 40px; border-radius: 20px; text-align: center; flex-grow: 1; margin: 0 20px; }
-        .win-btn { background: var(--accent-color); color: #000; border: none; padding: 15px 30px; margin: 10px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .win-btn { background: var(--accent-color); color: #000; border: none; padding: 10px 20px; margin: 5px; border-radius: 8px; font-weight: bold; cursor: pointer; }
         .no-one-btn { background: #64748b; color: white; }
 
-        /* ستايل أزرار الترتيب */
-        .order-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 700px; margin: 20px auto; }
-        .order-item { background: #1e293b; border: 2px solid #334155; padding: 18px; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.3s; text-align: right; }
-        .order-item:hover { border-color: var(--order-color); }
-        .order-item.revealed { border-color: var(--order-color); background: #0f172a; }
+        .order-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 800px; margin: 20px auto; }
+        .order-item { background: #1e293b; border: 2px solid #334155; padding: 12px; border-radius: 10px; position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px;}
+        .reveal-btn { background: var(--order-color); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; width: 100%; }
+        .ans-text { display: none; font-size: 1.1rem; color: #4ade80; font-weight: bold; text-align: center; }
+        .point-tag { font-size: 0.7rem; color: #f59e0b; }
 
         #setup-screen { display: none; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; }
         input { width: 300px; padding: 15px; background: #21262d; border: 1px solid var(--accent-color); color: #fff; text-align: center; margin-bottom: 15px; border-radius: 8px;}
@@ -97,7 +93,7 @@
         <h1>🌙 سيم جيم لايف زون</h1>
         <input type="text" id="t1" value="دربحه">
         <input type="text" id="t2" placeholder="أدخل اسم الفريق الثاني">
-        <button class="win-btn" onclick="showCategories()">ابدأ اللعب</button>
+        <button class="win-btn" onclick="showCategories()" style="font-size:1.5rem; padding:15px 40px;">ابدأ اللعب</button>
     </div>
 
     <div id="categories-screen"></div>
@@ -125,6 +121,9 @@
     </div>
 
     <script>
+        // مصفوفة النقاط حسب الترتيب
+        const orderPointsTable = { 1:3, 2:5, 3:7, 4:9, 5:11, 6:13, 7:15, 8:17, 9:19, 10:21 };
+
         window.adminAuth = function() {
             let p = prompt("هوية المطور:");
             if(p === "123") {
@@ -150,16 +149,6 @@
                 icon: "🚗",
                 left: { 200: {q:"ما هي الدولة المصنعة لسيارات لمبورغيني؟", a:"إيطاليا"}, 400: {q:"ماذا تسمى القطعة التي تبرد محرك السيارة؟", a:"الرديتر (Radiator)"}, 600: {q:"ما هو اسم نظام الدفع الرباعي في سيارات أودي؟", a:"كواترو (Quattro)"} },
                 right: { 200: {q:"ما هي الماركة التي يرمز لها بـ 4 حلقات متصلة؟", a:"أودي (Audi)"}, 400: {q:"ما هو اسم أول سيارة أطلقتها شركة تيسلا؟", a:"رودستر (Roadster)"}, 600: {q:"في أي مدينة يقع مقر شركة بي إم دبليو؟", a:"ميونخ، ألمانيا"} }
-            },
-            "الجغرافيا": {
-                icon: "🌍",
-                left: { 200: {q:"ما هي أكبر هضبة في العالم؟", a:"هضبة التبت"}, 400: {q:"ما هي الدولة التي تمتلك أكبر عدد من الجزر؟", a:"السويد"}, 600: {q:"أين يقع أعمق خندق مائي في العالم؟", a:"خندق ماريانا في المحيط الهادئ"} },
-                right: { 200: {q:"ما هي عاصمة أيسلندا؟", a:"ريكيافيك"}, 400: {q:"ما هو البحر الذي يفصل بين قارتي أفريقيا وأوروبا؟", a:"البحر الأبيض المتوسط"}, 600: {q:"ما هو النهر الذي يمر بباريس؟", a:"نهر السين"} }
-            },
-            "حكام الدول": {
-                icon: "👑",
-                left: { 200: {q:"من هو الملك الذي وحد المملكة العربية السعودية؟", a:"الملك عبدالعزيز"}, 400: {q:"من هو أول رئيس للولايات المتحدة الأمريكية؟", a:"جورج واشنطن"}, 600: {q:"من كان زعيم ليبيا لأكثر من 40 عاماً؟", a:"معمر القذافي"} },
-                right: { 200: {q:"من هي الملكة التي حكمت بريطانيا لأطول فترة؟", a:"إليزابيث الثانية"}, 400: {q:"من هو مؤسس دولة الإمارات؟", a:"الشيخ زايد بن سلطان"}, 600: {q:"من هو أول رئيس لمصر بعد الملكية؟", a:"محمد نجيب"} }
             },
             "الترتيب": {
                 icon: "🔢",
@@ -214,34 +203,66 @@
             document.getElementById('categories-screen').style.display = 'none';
             document.getElementById('game-interface').style.display = 'flex';
 
-            let html = `<h2 style="color:${isOrder ? '#0ea5e9' : 'var(--accent-color)'}">${cat} - ${pts} نقطة</h2>
-                        <p style="font-size:2.2rem; margin:30px 0; line-height:1.4;">${data.q}</p>`;
+            let html = `<h2 style="color:${isOrder ? '#0ea5e9' : 'var(--accent-color)'}">${cat}</h2>
+                        <p style="font-size:1.8rem; margin:20px 0;">${data.q}</p>`;
 
             if (isOrder) {
                 const answers = data.a.split(/\d+\./).filter(a => a.trim() !== "");
                 html += `<div class="order-grid">`;
                 answers.forEach((ans, i) => {
-                    html += `<div class="order-item" onclick="this.innerHTML='<span style=color:var(--order-color)>${i+1} - </span> ${ans.trim()}'; this.classList.add('revealed');">
-                             <span style='color:#64748b'>${i+1}</span> اضغط للكشف </div>`;
+                    let rank = i + 1;
+                    let ptsVal = orderPointsTable[rank];
+                    html += `
+                    <div class="order-item" id="item-${rank}">
+                        <span style="color:#64748b">المركز ${rank}</span>
+                        <span class="point-tag">(${ptsVal} نقاط)</span>
+                        <div class="ans-text" id="ans-${rank}">${ans.trim()}</div>
+                        <div id="btns-${rank}" style="width:100%">
+                            <button class="reveal-btn" onclick="revealOrder(${rank}, 1)">${document.getElementById('t1').value}</button>
+                            <button class="reveal-btn" onclick="revealOrder(${rank}, 2)" style="background:#0ea5e9; margin-top:4px;">${document.getElementById('t2').value}</button>
+                            <button class="reveal-btn" onclick="revealOrder(${rank}, 0)" style="background:#64748b; margin-top:4px;">كشف بدون نقاط</button>
+                        </div>
+                    </div>`;
                 });
-                html += `</div><div id="win-area" style="margin-top:20px;">
-                         <button class="win-btn" onclick="addPts(1)">${document.getElementById('t1').value}</button>
-                         <button class="win-btn" onclick="addPts(2)">${document.getElementById('t2').value}</button>
-                         <button class="win-btn no-one-btn" onclick="addPts(0)">لا أحد</button></div>`;
+                html += `</div>
+                <button class="win-btn" onclick="exitQ()" style="background:#ef4444; color:white; margin-top:20px;">إنهاء السؤال والعودة</button>`;
             } else {
-                html += `<div id="ans" style="display:none; text-align:center; color:#4ade80; font-weight:bold; font-size:1.8rem; background:rgba(0,0,0,0.5); padding:20px; border-radius:10px; margin-bottom:20px;">${data.a}</div>
-                         <button class="win-btn" id="rev-btn" onclick="document.getElementById('ans').style.display='block'; this.style.display='none'; document.getElementById('win-area').style.display='block';">إظهار الإجابة</button>
-                         <div id="win-area" style="display:none; margin-top:20px;">
-                         <button class="win-btn" onclick="addPts(1)">${document.getElementById('t1').value}</button>
-                         <button class="win-btn" onclick="addPts(2)">${document.getElementById('t2').value}</button>
-                         <button class="win-btn no-one-btn" onclick="addPts(0)">لا أحد</button></div>`;
+                html += `
+                <div id="ans" style="display:none; text-align:center; color:#4ade80; font-weight:bold; font-size:1.8rem; background:rgba(0,0,0,0.5); padding:20px; border-radius:10px; margin-bottom:20px;">${data.a}</div>
+                <button class="win-btn" id="rev-btn" onclick="document.getElementById('ans').style.display='block'; this.style.display='none'; document.getElementById('win-area').style.display='block';">إظهار الإجابة</button>
+                <div id="win-area" style="display:none; margin-top:20px;">
+                    <button class="win-btn" onclick="addPtsSimple(1)">فوز ${document.getElementById('t1').value}</button>
+                    <button class="win-btn" onclick="addPtsSimple(2)">فوز ${document.getElementById('t2').value}</button>
+                    <button class="win-btn no-one-btn" onclick="addPtsSimple(0)">لا أحد</button>
+                </div>`;
             }
             document.getElementById('q-content').innerHTML = html;
         }
 
-        function addPts(team) {
+        // كشف عنصر الترتيب وإضافة النقاط مباشرة
+        function revealOrder(rank, team) {
+            const ptsToAdd = orderPointsTable[rank];
+            if(team === 1) {
+                score1 += ptsToAdd;
+                document.getElementById('score1').innerText = score1;
+            } else if(team === 2) {
+                score2 += ptsToAdd;
+                document.getElementById('score2').innerText = score2;
+            }
+            
+            document.getElementById(`ans-${rank}`).style.display = "block";
+            document.getElementById(`btns-${rank}`).style.display = "none";
+            document.getElementById(`item-${rank}`).style.borderColor = "var(--order-color)";
+        }
+
+        // فوز عادي للأسئلة العادية
+        function addPtsSimple(team) {
             if(team === 1) { score1 += currentPoints; document.getElementById('score1').innerText = score1; }
             else if(team === 2) { score2 += currentPoints; document.getElementById('score2').innerText = score2; }
+            exitQ();
+        }
+
+        function exitQ() {
             lastBox.classList.add('used');
             document.getElementById('game-interface').style.display = 'none';
             document.getElementById('categories-screen').style.display = 'grid';
