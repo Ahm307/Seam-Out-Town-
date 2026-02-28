@@ -20,7 +20,7 @@
             align-items: center; min-height: 100vh;
         }
 
-        /* --- نظام التنبيه الكلاسيكي --- */
+        /* --- نظام التنبيه الكلاسيكي (محلي الآن) --- */
         #admin-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.95); 
@@ -80,7 +80,7 @@
 
     <div id="admin-overlay">
         <div class="flashing-title">📢 الـمـطـور جـنـازة 📢</div>
-        <div class="flashing-msg" id="alert-text">إخلاء الموقع فوراً</div>
+        <div id="alert-text" class="flashing-msg">إخلاء الموقع فوراً</div>
         <button class="win-btn" onclick="closeAlert()">إغلاق</button>
     </div>
 
@@ -120,46 +120,24 @@
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyBZYjgSDNbHds0PPduqw-hO9Xz3cb21uMI",
-            authDomain: "live-zone-management.firebaseapp.com",
-            databaseURL: "https://live-zone-management-default-rtdb.firebaseio.com",
-            projectId: "live-zone-management",
-            storageBucket: "live-zone-management.firebasestorage.app",
-            messagingSenderId: "548749835258",
-            appId: "1:548749835258:web:80560271840af10ce90243"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const alertRef = ref(db, 'system_alert');
-
-        onValue(alertRef, (snapshot) => {
-            const msg = snapshot.val();
-            if(msg && msg !== "") {
-                document.getElementById('alert-text').innerText = msg;
-                document.getElementById('admin-overlay').style.display = "flex";
-            } else {
-                document.getElementById('admin-overlay').style.display = "none";
-            }
-        });
-
+    <script>
+        // --- وظائف النظام الإداري (بدون فايربيس) ---
         window.adminAuth = function() {
             let p = prompt("هوية المطور:");
             if(p === "123") {
-                let m = prompt("اكتب الرسالة التي ستظهر للجميع (اتركها فارغة للإلغاء):");
-                set(alertRef, m); 
+                let m = prompt("اكتب الرسالة التي ستظهر للتنبيه:");
+                if(m) {
+                    document.getElementById('alert-text').innerText = m;
+                    document.getElementById('admin-overlay').style.display = "flex";
+                }
             }
         };
 
-        window.closeAlert = function() { set(alertRef, ""); };
-    </script>
+        window.closeAlert = function() {
+            document.getElementById('admin-overlay').style.display = "none";
+        };
 
-    <script>
+        // --- منطق اللعبة ---
         let score1 = 0, score2 = 0, currentPoints = 0, lastBox = null;
 
         const bank = {
@@ -202,6 +180,12 @@
                 }
             }
         };
+
+        // إخفاء شاشة الإنترو تلقائياً
+        setTimeout(() => {
+            document.getElementById('intro-screen').style.display = 'none';
+            document.getElementById('setup-screen').style.display = 'flex';
+        }, 2000);
 
         function showCategories() {
             document.getElementById('side-name-1').innerText = document.getElementById('t1').value;
