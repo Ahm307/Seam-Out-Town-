@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سيم جيم - نسخة LN المطورة</title>
+    <title>سيم جيم لايف زون</title>
     <style>
         :root {
-            --bg-color: #000000;
-            --card-bg: #0f172a;
-            --accent-blue: #007bff;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #f59e0b;
             --text-primary: #f8fafc;
         }
 
@@ -19,135 +19,116 @@
             align-items: center; min-height: 100vh;
         }
 
-        /* --- نظام التنبيه الإداري الثابت --- */
+        /* --- نظام التنبيه الكلاسيكي (المطور جنازة) --- */
         #admin-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.98); 
+            background: rgba(0, 0, 0, 0.95); 
             display: none; flex-direction: column; justify-content: center;
             align-items: center; z-index: 20000; text-align: center;
-            border: 5px solid var(--accent-blue);
-            box-shadow: inset 0 0 100px rgba(0, 123, 255, 0.5);
+            animation: border-flash 0.3s infinite alternate;
+        }
+        
+        @keyframes border-flash {
+            from { box-shadow: inset 0 0 50px red; }
+            to { box-shadow: inset 0 0 150px #000; }
         }
 
-        .alert-title {
-            color: var(--accent-blue); font-size: 3rem; margin-bottom: 20px;
-            font-weight: 900; text-shadow: 0 0 20px var(--accent-blue);
+        .flashing-title {
+            color: #ff0000; font-size: 2.5rem; margin-bottom: 20px;
+            animation: blink 0.2s infinite alternate; font-weight: 900;
         }
-        .alert-msg {
-            color: #fff; font-size: 2.5rem; font-weight: bold;
-            padding: 0 30px; line-height: 1.5;
+        .flashing-msg {
+            color: #fff; font-size: 4rem; font-weight: 900;
+            animation: shake 0.1s infinite;
+        }
+
+        @keyframes blink { from { opacity: 1; } to { opacity: 0.1; } }
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            50% { transform: translate(-3px, 0px) rotate(1deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        /* الزر المخفي */
+        #admin-trigger {
+            position: fixed; bottom: 0; left: 0; width: 50px; height: 50px;
+            background: transparent; cursor: pointer; z-index: 1000;
         }
 
         #intro-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; display: flex; justify-content: center;
+            background: var(--bg-color); display: flex; justify-content: center;
             align-items: center; z-index: 9999;
         }
         .shiny-text {
-            font-size: 4rem; font-weight: 900; color: var(--accent-blue);
-            text-shadow: 0 0 30px var(--accent-blue);
+            font-size: 3.5rem; font-weight: bold; color: var(--accent-color);
         }
 
         #top-timer-bar {
-            display: none; background-color: var(--accent-blue);
-            color: #fff; padding: 10px 40px; border-radius: 50px;
-            font-size: 1.8rem; font-weight: bold; margin-top: 20px;
+            display: none; background-color: var(--accent-color);
+            color: #432b05; padding: 8px 30px; border-radius: 50px;
+            font-size: 1.6rem; font-weight: bold; margin-top: 20px;
         }
 
         #categories-screen {
             display: none; width: 95%; max-width: 1200px;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 20px; padding: 40px 20px;
         }
         .cat-card {
-            background: var(--card-bg); border-radius: 20px;
-            border: 2px solid #1e293b; transition: 0.3s;
+            background: var(--card-bg); border-radius: 15px;
+            border-bottom: 5px solid var(--accent-color); overflow: hidden;
         }
-        .cat-card:hover { border-color: var(--accent-blue); transform: translateY(-5px); }
         .cat-main { display: flex; width: 100%; justify-content: space-between; align-items: center; }
-        .points-col { display: flex; flex-direction: column; gap: 8px; padding: 15px; }
+        .points-col { display: flex; flex-direction: column; gap: 5px; width: 80px; padding: 10px; }
         .point-box {
-            background: #1e293b; color: #fff; width: 60px; height: 60px;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: bold; cursor: pointer; border-radius: 12px; transition: 0.3s;
+            background: #334155; color: #fff; padding: 15px 5px; text-align: center;
+            font-weight: bold; cursor: pointer; border-radius: 30px; margin: 5px;
         }
-        .point-box:hover:not(.used) { background: var(--accent-blue); }
-        .point-box.used { opacity: 0.1; cursor: not-allowed; }
-        .cat-title {
-            text-align: center; background: var(--accent-blue);
-            color: #fff; padding: 10px; font-weight: bold; border-radius: 0 0 18px 18px;
-        }
-
-        .options-container {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px;
-        }
-        .option-btn {
-            background: #1e293b; border: 2px solid #334155; color: white;
-            padding: 20px; border-radius: 15px; font-size: 1.2rem; cursor: pointer;
-            transition: 0.3s; text-align: right;
-        }
-        .option-btn:hover { border-color: var(--accent-blue); background: #0f172a; }
+        .point-box.used { opacity: 0.2; cursor: default; }
+        .cat-title { text-align: center; background: #f1f5f9; color: #000; padding: 10px; font-weight: bold; }
 
         #game-interface { display: none; width: 98%; justify-content: space-between; margin-top: 20px; }
-        .sidebar {
-            width: 250px; background: #0f172a; border: 2px solid var(--accent-blue);
-            padding: 20px; border-radius: 20px;
-        }
-        .score-display { font-size: 4rem; font-weight: 900; color: var(--accent-blue); }
+        .sidebar { width: 220px; background: rgba(30, 41, 59, 0.6); border: 2px solid var(--accent-color); padding: 15px; border-radius: 15px; text-align: center;}
+        .score-display { font-size: 3.5rem; font-weight: bold; color: var(--accent-color); }
+        .question-card { background: var(--card-bg); padding: 40px; border-radius: 20px; text-align: center; flex-grow: 1; margin: 0 20px; }
         
-        .help-item {
-            background: rgba(255,255,255,0.05); padding: 15px; margin-top: 10px;
-            border-radius: 12px; cursor: pointer; transition: 0.3s;
-        }
-        .help-item.used-help { background: #334155; text-decoration: line-through; opacity: 0.5; }
-
-        .question-area { flex-grow: 1; margin: 0 30px; }
-        .question-card { background: #0f172a; padding: 50px; border-radius: 30px; border: 1px solid #1e293b; }
-
-        .win-btn {
-            background: var(--accent-blue); color: white; border: none;
-            padding: 15px 40px; margin: 10px; border-radius: 12px; font-weight: bold; cursor: pointer;
-        }
-
-        #setup-screen { display: none; flex-direction: column; align-items: center; justify-content: center; height: 80vh; }
-        input { width: 300px; padding: 15px; margin: 10px; background: #1e293b; border: 1px solid var(--accent-blue); color: #fff; border-radius: 10px; text-align: center; }
+        .win-btn { background: var(--accent-color); color: #000; border: none; padding: 15px 30px; margin: 10px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        #setup-screen { display: none; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; }
+        input { width: 300px; padding: 15px; background: #21262d; border: 1px solid var(--accent-color); color: #fff; text-align: center; margin-bottom: 15px; border-radius: 8px;}
     </style>
 </head>
 <body>
 
     <div id="admin-overlay">
-        <div class="alert-title">S Y S T E M - A L E R T</div>
-        <div class="alert-msg" id="alert-text">رسالة إدارية هامة</div>
-        <button class="win-btn" style="margin-top:40px" onclick="closeAlert()">إغلاق</button>
+        <div class="flashing-title">📢 الـمـطـور جـنـازة 📢</div>
+        <div class="flashing-msg" id="alert-text">إخلاء الموقع فوراً</div>
+        <button class="win-btn" onclick="document.getElementById('admin-overlay').style.display='none'">إغلاق</button>
     </div>
 
-    <div id="intro-screen"><div class="shiny-text">LN EDITION</div></div>
+    <div id="admin-trigger" onclick="adminAuth()"></div>
+
+    <div id="intro-screen"><div class="shiny-text">سيم جيم لايف زون</div></div>
     <div id="top-timer-bar">00:00</div>
 
     <div id="setup-screen">
-        <h1 style="color:var(--accent-blue)">سيم جيم - نسخة الأزرق والأسود</h1>
+        <h1>🌙 سيم جيم لايف زون</h1>
         <input type="text" id="t1" value="دربحه">
-        <input type="text" id="t2" placeholder="اسم الفريق الثاني">
-        <button class="win-btn" onclick="showCategories()">دخول المسابقة</button>
+        <input type="text" id="t2" placeholder="أدخل اسم الفريق الثاني">
+        <button class="win-btn" onclick="showCategories()">ابدأ اللعب</button>
     </div>
 
     <div id="categories-screen"></div>
 
     <div id="game-interface">
         <div class="sidebar">
-            <h2 id="side-name-1"></h2>
+            <div id="side-name-1" style="color:var(--accent-color)"></div>
             <div class="score-display" id="score1">0</div>
-            <div class="help-item" onclick="this.classList.add('used-help')">📞 اتصال</div>
-            <div class="help-item" onclick="this.classList.add('used-help')">✌️ حذف إجابة</div>
         </div>
-
-        <div class="question-area" id="q-content"></div>
-
+        <div class="question-card" id="q-content"></div>
         <div class="sidebar">
-            <h2 id="side-name-2"></h2>
+            <div id="side-name-2" style="color:var(--accent-color)"></div>
             <div class="score-display" id="score2">0</div>
-            <div class="help-item" onclick="this.classList.add('used-help')">📞 اتصال</div>
-            <div class="help-item" onclick="this.classList.add('used-help')">✌️ حذف إجابة</div>
         </div>
     </div>
 
@@ -167,14 +148,13 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-
-        // مراقبة التنبيه من Firebase
         const alertRef = ref(db, 'system_alert');
+
         onValue(alertRef, (snapshot) => {
             const msg = snapshot.val();
             if(msg) {
                 document.getElementById('alert-text').innerText = msg;
-                document.getElementById('admin-overlay').style.display = 'flex';
+                document.getElementById('admin-overlay').style.display = "flex";
             }
         });
     </script>
@@ -183,113 +163,109 @@
         let score1 = 0, score2 = 0, currentPoints = 0, lastBox = null;
 
         const bank = {
-            "عالم التكنولوجيا": {
-                icon: "💻",
-                left: { 
-                    200: {q: "ما هي لغة البرمجة الأكثر استخداماً في تطوير الويب؟", options: ["Python", "JavaScript", "C++"], a: "JavaScript"},
-                    400: {q: "ماذا يرمز اختصار CPU؟", options: ["معالج مركزي", "ذاكرة وصول", "كرت شاشة"], a: "معالج مركزي"},
-                    600: {q: "في أي عام تم إطلاق أول هاتف آيفون؟", options: ["2005", "2007", "2009"], a: "2007"}
-                },
-                right: {
-                    200: {q: "من هو مؤسس شركة مايكروسوفت؟", options: ["ستيف جوبز", "بيل غيتس", "إيلون ماسك"], a: "بيل غيتس"},
-                    400: {q: "أي شركة طورت نظام الأندرويد؟", options: ["أبل", "جوجل", "سامسونج"], a: "جوجل"},
-                    600: {q: "ما هي أكبر سعة تخزينية مما يلي؟", options: ["1 تيرابايت", "1024 جيجابايت", "كلاهما متساويان"], a: "كلاهما متساويان"}
-                }
+            "أسئلة دينية": {
+                icon: "🕌",
+                left: { 200: {q:"ما هي السورة التي تنتهي جميع آياتها بحرف الراء؟", a:"سورة الكوثر"}, 400: {q:"ما هي الصلاة التي لا ركوع فيها ولا سجود؟", a:"صلاة الجنازة"}, 600: {q:"من هو الصحابي الذي اهتز لموته عرش الرحمن؟", a:"سعد بن معاذ"} },
+                right: { 200: {q:"ما هي السورة التي تسمى (قلب القرآن)؟", a:"سورة يس"}, 400: {q:"كم عدد السجدات في القرآن الكريم؟", a:"15 سجدة"}, 600: {q:"ما هي السورة التي لا تبدأ بالبسملة؟", a:"سورة التوبة"} }
             },
-            "كرة القدم": {
-                icon: "⚽",
-                left: {
-                    200: {q: "كم عدد لاعبي فريق كرة القدم داخل الملعب؟", options: ["10", "11", "12"], a: "11"},
-                    400: {q: "من هو اللاعب الملقب بـ (البرغوث)؟", options: ["رونالدو", "ميسي", "نيمار"], a: "ميسي"},
-                    600: {q: "أي دولة فازت بكأس العالم 2022؟", options: ["فرنسا", "الأرجنتين", "المغرب"], a: "الأرجنتين"}
-                },
-                right: {
-                    200: {q: "كم مدة الشوط الواحد في كرة القدم؟", options: ["40 دقيقة", "45 دقيقة", "50 دقيقة"], a: "45 دقيقة"},
-                    400: {q: "من هو النادي الملقب بـ (المرنغي)؟", options: ["برشلونة", "ريال مدريد", "ليفربول"], a: "ريال مدريد"},
-                    600: {q: "أين أقيم أول مونديال في التاريخ عام 1930؟", options: ["البرازيل", "الأوروغواي", "إيطاليا"], a: "الأوروغواي"}
-                }
+            "السيارات": {
+                icon: "🚗",
+                left: { 200: {q:"ما هي الدولة المصنعة لسيارات لمبورغيني؟", a:"إيطاليا"}, 400: {q:"ماذا تسمى القطعة التي تبرد محرك السيارة؟", a:"الرديتر (Radiator)"}, 600: {q:"ما هو اسم نظام الدفع الرباعي في سيارات أودي؟", a:"كواترو (Quattro)"} },
+                right: { 200: {q:"ما هي الماركة التي يرمز لها بـ 4 حلقات متصلة؟", a:"أودي (Audi)"}, 400: {q:"ما هو اسم أول سيارة أطلقتها شركة تيسلا؟", a:"رودستر (Roadster)"}, 600: {q:"في أي مدينة يقع مقر شركة بي إم دبليو؟", a:"ميونخ، ألمانيا"} }
+            },
+            "الجغرافيا": {
+                icon: "🌍",
+                left: { 200: {q:"ما هي أكبر هضبة في العالم؟", a:"هضبة التبت"}, 400: {q:"ما هي الدولة التي تمتلك أكبر عدد من الجزر؟", a:"السويد"}, 600: {q:"أين يقع أعمق خندق مائي في العالم؟", a:"خندق ماريانا في المحيط الهادئ"} },
+                right: { 200: {q:"ما هي عاصمة أيسلندا؟", a:"ريكيافيك"}, 400: {q:"ما هو البحر الذي يفصل بين قارتي أفريقيا وأوروبا؟", a:"البحر الأبيض المتوسط"}, 600: {q:"ما هو النهر الذي يمر بباريس؟", a:"نهر السين"} }
+            },
+            "حكام الدول": {
+                icon: "👑",
+                left: { 200: {q:"من هو الملك الذي وحد المملكة العربية السعودية؟", a:"الملك عبدالعزيز"}, 400: {q:"من هو أول رئيس للولايات المتحدة الأمريكية؟", a:"جورج واشنطن"}, 600: {q:"من كان زعيم ليبيا لأكثر من 40 عاماً؟", a:"معمر القذافي"} },
+                right: { 200: {q:"من هي الملكة التي حكمت بريطانيا لأطول فترة؟", a:"إليزابيث الثانية"}, 400: {q:"من هو مؤسس دولة الإمارات؟", a:"الشيخ زايد بن سلطان"}, 600: {q:"من هو أول رئيس لمصر بعد الملكية؟", a:"محمد نجيب"} }
+            },
+            "الدول العربية": {
+                icon: "🏙️",
+                left: { 200: {q:"ما هي عاصمة الصومال؟", a:"مقديشو"}, 400: {q:"ما هي أكبر دولة عربية من حيث المساحة؟", a:"الجزائر"}, 600: {q:"أي دولة عربية يمر بها خط الاستواء؟", a:"الصومال"} },
+                right: { 200: {q:"ما هو لقب مدينة القدس؟", a:"زهرة المداين"}, 400: {q:"في أي مدينة يقع جامع الزيتونة؟", a:"تونس العاصمة"}, 600: {q:"ما هي الدولة العربية التي تعتبر أكبر مصدر للنفط في العالم؟", a:"السعودية"} }
             }
         };
 
-        function closeAlert() { document.getElementById('admin-overlay').style.display = 'none'; }
+        function adminAuth() {
+            let p = prompt("هوية المطور:");
+            if(p === "123") {
+                let m = prompt("الرسالة:");
+                if(m) alert("تم الإرسال (يتطلب ربط Write في Firebase)");
+            }
+        }
 
         setTimeout(() => {
             document.getElementById('intro-screen').style.display = 'none';
             document.getElementById('setup-screen').style.display = 'flex';
+            startTimer();
         }, 2000);
+
+        function startTimer() {
+            let s = 0; document.getElementById('top-timer-bar').style.display = 'block';
+            setInterval(() => {
+                s++; let m = Math.floor(s/60), sec = s%60;
+                document.getElementById('top-timer-bar').innerText = `${m<10?'0'+m:m}:${sec<10?'0'+sec:sec}`;
+            }, 1000);
+        }
 
         function showCategories() {
             document.getElementById('side-name-1').innerText = document.getElementById('t1').value;
             document.getElementById('side-name-2').innerText = document.getElementById('t2').value;
             document.getElementById('setup-screen').style.display = 'none';
-            document.getElementById('top-timer-bar').style.display = 'block';
             const screen = document.getElementById('categories-screen');
-            screen.style.display = 'grid';
-            screen.innerHTML = "";
+            screen.style.display = 'grid'; screen.innerHTML = "";
             Object.keys(bank).forEach(cat => {
                 screen.innerHTML += `
-                    <div class="cat-card">
-                        <div class="cat-main">
-                            <div class="points-col">
-                                <div class="point-box" onclick="loadQ('${cat}','left',200, this)">200</div>
-                                <div class="point-box" onclick="loadQ('${cat}','left',400, this)">400</div>
-                                <div class="point-box" onclick="loadQ('${cat}','left',600, this)">600</div>
-                            </div>
-                            <div style="font-size: 3rem;">${bank[cat].icon}</div>
-                            <div class="points-col">
-                                <div class="point-box" onclick="loadQ('${cat}','right',200, this)">200</div>
-                                <div class="point-box" onclick="loadQ('${cat}','right',400, this)">400</div>
-                                <div class="point-box" onclick="loadQ('${cat}','right',600, this)">600</div>
-                            </div>
+                <div class="cat-card">
+                    <div class="cat-main">
+                        <div class="points-col">
+                            <div class="point-box" onclick="loadQ('${cat}','left',200, this)">200</div>
+                            <div class="point-box" onclick="loadQ('${cat}','left',400, this)">400</div>
+                            <div class="point-box" onclick="loadQ('${cat}','left',600, this)">600</div>
                         </div>
-                        <div class="cat-title">${cat}</div>
-                    </div>`;
+                        <div style="font-size: 3rem;">${bank[cat].icon}</div>
+                        <div class="points-col">
+                            <div class="point-box" onclick="loadQ('${cat}','right',200, this)">200</div>
+                            <div class="point-box" onclick="loadQ('${cat}','right',400, this)">400</div>
+                            <div class="point-box" onclick="loadQ('${cat}','right',600, this)">600</div>
+                        </div>
+                    </div>
+                    <div class="cat-title">${cat}</div>
+                </div>`;
             });
         }
 
         function loadQ(cat, side, pts, el) {
             if(el.classList.contains('used')) return;
             currentPoints = pts; lastBox = el;
-            const qData = bank[cat][side][pts];
+            const data = bank[cat][side][pts];
             document.getElementById('categories-screen').style.display = 'none';
             document.getElementById('game-interface').style.display = 'flex';
-            
-            let optionsHtml = qData.options.map(opt => `<button class="option-btn" onclick="checkAns(this, '${qData.a}')">${opt}</button>`).join('');
-            
             document.getElementById('q-content').innerHTML = `
-                <div class="question-card">
-                    <h2 style="color:var(--accent-blue)">${cat} - ${pts} نقطة</h2>
-                    <p style="font-size:2.2rem; margin:20px 0;">${qData.q}</p>
-                    <div class="options-container">${optionsHtml}</div>
-                    <div id="win-area" style="display:none; margin-top:30px;">
-                        <button class="win-btn" onclick="addPts(1)">فوز ${document.getElementById('t1').value}</button>
-                        <button class="win-btn" onclick="addPts(2)">فوز ${document.getElementById('t2').value}</button>
-                    </div>
+                <h2>${cat} - ${pts} نقطة</h2>
+                <p style="font-size:2rem; margin:30px 0;">${data.q}</p>
+                <p id="ans" style="display:none; color:#4ade80; font-weight:bold; font-size:1.8rem;">الإجابة: ${data.a}</p>
+                <button class="win-btn" id="rev-btn" onclick="document.getElementById('ans').style.display='block'; this.style.display='none'; document.getElementById('win-area').style.display='block';">إظهار الإجابة</button>
+                <div id="win-area" style="display:none; margin-top:20px;">
+                    <p>من الفائز؟</p>
+                    <button class="win-btn" onclick="addPts(1)">${document.getElementById('t1').value}</button>
+                    <button class="win-btn" onclick="addPts(2)">${document.getElementById('t2').value}</button>
                 </div>`;
         }
 
-        function checkAns(btn, correct) {
-            if(btn.innerText === correct) {
-                btn.style.background = "#28a745";
-                document.getElementById('win-area').style.display = "block";
-            } else {
-                btn.style.background = "#dc3545";
-                alert("إجابة خاطئة!");
-            }
-        }
-
         function addPts(team) {
-            if(team === 1) { score1 += currentPoints; document.getElementById('score1').innerText = score1; }
-            else { score2 += currentPoints; document.getElementById('score2').innerText = score2; }
+            if(team === 1) score1 += currentPoints;
+            else score2 += currentPoints;
+            document.getElementById('score1').innerText = score1;
+            document.getElementById('score2').innerText = score2;
             lastBox.classList.add('used');
             document.getElementById('game-interface').style.display = 'none';
             document.getElementById('categories-screen').style.display = 'grid';
         }
-
-        let s = 0; setInterval(() => {
-            s++; let m = Math.floor(s/60), sec = s%60;
-            document.getElementById('top-timer-bar').innerText = `${m<10?'0'+m:m}:${sec<10?'0'+sec:sec}`;
-        }, 1000);
     </script>
 </body>
 </html>
